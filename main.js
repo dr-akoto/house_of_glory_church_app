@@ -176,6 +176,22 @@ ipcMain.handle('finance:getStats', async () => {
   return getService('finance').getStats();
 });
 
+ipcMain.handle('finance:getTithes', async () => {
+  return getService('finance').getTithes();
+});
+
+ipcMain.handle('finance:addTithe', async (event, tithe) => {
+  return getService('finance').addTithe(tithe);
+});
+
+ipcMain.handle('finance:updateTithe', async (event, { id, data }) => {
+  return getService('finance').updateTithe(id, data);
+});
+
+ipcMain.handle('finance:deleteTithe', async (event, id) => {
+  return getService('finance').deleteTithe(id);
+});
+
 // Sermons IPC handlers
 ipcMain.handle('sermons:getAll', async () => {
   return getService('sermons').getAll();

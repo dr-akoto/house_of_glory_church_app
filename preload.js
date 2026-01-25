@@ -32,6 +32,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     update: (id, data) => ipcRenderer.invoke('finance:update', { id, data }),
     delete: (id) => ipcRenderer.invoke('finance:delete', id),
     getStats: () => ipcRenderer.invoke('finance:getStats'),
+    // Tithes
+    getTithes: () => ipcRenderer.invoke('finance:getTithes'),
+    addTithe: (tithe) => ipcRenderer.invoke('finance:addTithe', tithe),
+    updateTithe: (id, data) => ipcRenderer.invoke('finance:updateTithe', { id, data }),
+    deleteTithe: (id) => ipcRenderer.invoke('finance:deleteTithe', id),
   },
   
   // Sermons
