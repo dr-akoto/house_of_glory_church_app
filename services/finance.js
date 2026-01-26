@@ -118,13 +118,31 @@ const financeService = {
   async addTithe(tithe) {
     try {
       console.log('Adding tithe:', tithe);
-      const docRef = await addDoc(collection(db, TITHES_COLLECTION), {
+      // Add tithe to tithes collection
+      const titheDocRef = await addDoc(collection(db, TITHES_COLLECTION), {
         ...tithe,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
-      console.log('Tithe added with ID:', docRef.id);
-      return { success: true, id: docRef.id };
+
+      // Also add a corresponding finance transaction
+      const financeTransaction = {
+        type: 'income',
+        category: 'tithe',
+        amount: tithe.amount,
+        memberId: tithe.memberId || null,
+        memberName: tithe.memberName || '',
+        date: tithe.date || new Date().toISOString(),
+        notes: tithe.notes || '',
+        source: 'tithe',
+        titheId: titheDocRef.id, // Link to tithe record
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      const financeDocRef = await addDoc(collection(db, COLLECTION), financeTransaction);
+
+      console.log('Tithe added with ID:', titheDocRef.id, 'and finance transaction ID:', financeDocRef.id);
+      return { success: true, id: titheDocRef.id, financeId: financeDocRef.id };
     } catch (error) {
       console.error('Error adding tithe:', error);
       return { success: false, message: error.message };
@@ -138,6 +156,22 @@ const financeService = {
         ...data,
         updatedAt: new Date().toISOString(),
       });
+
+      // Also update the corresponding finance transaction if it exists
+      // Find the finance transaction with titheId === id
+      const q = query(collection(db, COLLECTION), where('titheId', '==', id));
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const financeDoc = snapshot.docs[0];
+        await updateDoc(doc(db, COLLECTION, financeDoc.id), {
+          amount: data.amount,
+          memberId: data.memberId || null,
+          memberName: data.memberName || '',
+          date: data.date || new Date().toISOString(),
+          notes: data.notes || '',
+          updatedAt: new Date().toISOString(),
+        });
+      }
       return { success: true };
     } catch (error) {
       console.error('Error updating tithe:', error);

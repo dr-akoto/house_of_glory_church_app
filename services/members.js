@@ -39,6 +39,7 @@ function normalizeMember(data) {
     status: data.status || 'active',
     address: data.address || '',
     notes: data.notes || '',
+    profilePicture: data.profilePicture || null,
     createdAt: data.createdAt || data.created_at || null,
     updatedAt: data.updatedAt || data.updated_at || null,
   };
