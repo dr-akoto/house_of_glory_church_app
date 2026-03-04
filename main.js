@@ -70,17 +70,23 @@ function createWindow() {
     },
   });
 
-  // Show window as soon as it's ready (before content fully loads)
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-  });
+// Show window as soon as it's ready (before content fully loads)
+mainWindow.once('ready-to-show', () => {
+  mainWindow.show();
+});
 
-  // Load the local HTML renderer
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+// In development, load from Vite dev server
+if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+  mainWindow.loadURL('http://localhost:5173');
+  // mainWindow.webContents.openDevTools();
+} else {
+  // In production, load from built files
+  mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+}
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+mainWindow.on('closed', () => {
+  mainWindow = null;
+});
 }
 
 app.whenReady().then(createWindow);
