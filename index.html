@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>House of Glory Church App</title>
+<style>
+  :root {
+    --primary: #003DA5;
+    --primary-dark: #002d7a;
+    --primary-light: #1a5cc8;
+    --accent: #FFD700;
+    --accent-light: #ffe44d;
+    --sidebar-bg: #0a1628;
+    --sidebar-text: #c8c8d8;
+    --sidebar-active: #003DA5;
+    --bg: #f0f2f5;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-muted: #7f8c9a;
+    --border: #dde1e7;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --info: #2980b9;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* ─── APP SHELL ─── */
+  #app { display: flex; height: 100vh; }
+
+  /* ─── SPLIT LOGIN SCREEN ─── */
+  #login-screen { display: flex; height: 100vh; width: 100vw; }
+  .login-brand {
+    position: relative; flex: 1; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* Equal diagonal split: blue top-left, gold bottom-right */
+  .login-brand .diag-blue {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #003DA5;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    z-index: 1;
+  }
+  .login-brand .diag-gold {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #FFD700;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    z-index: 1;
+  }
+  .login-brand .brand-content {
+    position: relative; z-index: 10; display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .login-brand .logo-ring {
+    width: 220px; height: 220px; border-radius: 50%;
+    background: transparent; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    animation: logoBounce 3s ease-in-out infinite;
+  }
+  .login-brand .logo-ring img { width: 220px; height: 220px; object-fit: contain; }
+  @keyframes logoBounce {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-18px); }
+    50% { transform: translateY(0); }
+    65% { transform: translateY(-10px); }
+    80% { transform: translateY(0); }
+    90% { transform: translateY(-4px); }
+  }
+  .login-brand .brand-name { color: #003DA5; font-size: 30px; font-weight: 800; text-shadow: 0 2px 8px rgba(255,255,255,0.3); letter-spacing: 0.5px; }
+  .login-brand .brand-sub { color: #003DA5; font-size: 14px; font-weight: 600; margin-top: 6px; text-shadow: 0 2px 8px rgba(255,255,255,0.3); letter-spacing: 1px; text-transform: uppercase; }
+
+  .login-form-panel {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    background: #f8f9fb; padding: 40px;
+  }
+  .login-card { background: white; border-radius: 16px; padding: 48px 40px; width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); text-align: center; }
+  .login-card h1 { font-size: 24px; color: var(--primary); font-weight: 800; margin-bottom: 4px; }
+  .login-card .login-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+  .login-card .welcome-text { font-size: 15px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
+  .form-group { margin-bottom: 16px; text-align: left; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text); transition: border-color .2s; background: white; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  /* ─── SIDEBAR ─── */
+  #sidebar { width: 220px; background: var(--sidebar-bg); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+  .sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-header .church-name { color: white; font-weight: 700; font-size: 14px; line-height: 1.3; }
+  .sidebar-header .church-sub { color: var(--accent); font-size: 11px; margin-top: 2px; }
+  .nav-section-label { color: rgba(255,255,255,0.3); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 14px 16px 6px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: var(--sidebar-text); font-size: 13px; cursor: pointer; border-radius: 0; transition: all .18s; border-left: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+  .nav-item.active { background: rgba(0,61,165,0.35); color: white; border-left-color: var(--accent); }
+  .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  .sidebar-footer { margin-top: auto; padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .user-info { display: flex; align-items: center; gap: 10px; color: var(--sidebar-text); font-size: 12px; cursor: pointer; padding: 6px 0; }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; flex-shrink: 0; }
+  .user-email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+  .btn-logout { width: 100%; padding: 8px; background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 6px; transition: background .2s; }
+  .btn-logout:hover { background: rgba(231,76,60,0.3); }
+
+  /* ─── MAIN CONTENT ─── */
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { background: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .topbar h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* ─── BUTTONS ─── */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .18s; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-accent { background: var(--accent); color: white; }
+  .btn-accent:hover { background: var(--accent-light); color: var(--text); }
+  .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: #c0392b; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-icon { padding: 6px 8px; background: transparent; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 14px; transition: all .15s; }
+  .btn-icon:hover { background: var(--bg); }
+  .btn-icon.danger:hover { background: #fde8e8; border-color: var(--danger); }
+
+  /* ─── CARDS ─── */
+  .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; }
+  .stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; }
+  .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .stat-icon.red { background: #fdeaea; }
+  .stat-icon.gold { background: #fdf6e3; }
+  .stat-icon.green { background: #e8f8f1; }
+  .stat-icon.blue { background: #e8f0fe; }
+  .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .stat-value { font-size: 24px; font-weight: 700; color: var(--text); }
+  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ─── TABLES ─── */
+  .table-wrapper { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .table-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .table-header h3 { font-size: 15px; font-weight: 700; }
+  .search-box { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; width: 220px; }
+  .search-box:focus { outline: none; border-color: var(--primary); }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: #f8f9fb; padding: 11px 16px; text-align: left; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); }
+  tbody td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #fafbfc; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-success { background: #e8f8f0; color: #27ae60; }
+  .badge-danger { background: #fdeaea; color: #e74c3c; }
+  .badge-warning { background: #fef9e7; color: #d68910; }
+  .badge-info { background: #e8f0fe; color: #2980b9; }
+  .badge-muted { background: #f0f2f5; color: var(--text-muted); }
+
+  /* ─── MODAL ─── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .modal { background: white; border-radius: 14px; padding: 28px; width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .modal-lg { width: 680px; }
+  .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ─── TOAST ─── */
+  #toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+  .toast-item { padding: 12px 20px; border-radius: 10px; color: white; font-size: 13px; font-weight: 500; min-width: 240px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: slideIn .3s ease; }
+  .toast-item.success { background: var(--success); }
+  .toast-item.error { background: var(--danger); }
+  .toast-item.info { background: var(--info); }
+  @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* ─── TABS ─── */
+  .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+  .tab { padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s; }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  /* ─── GRID LAYOUTS ─── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .loading { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ─── BIBLE ─── */
+  .bible-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+  .bible-text { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); line-height: 1.9; font-size: 15px; max-height: 500px; overflow-y: auto; }
+  .verse { margin-bottom: 6px; }
+  .verse-num { font-weight: 700; color: var(--primary); font-size: 12px; margin-right: 6px; }
+
+  /* ─── SECTION VISIBILITY ─── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .actions-col { display: flex; gap: 6px; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+  /* ─── FINANCE SUMMARY ─── */
+  .finance-type-income { color: var(--success); font-weight: 600; }
+  .finance-type-expense { color: var(--danger); font-weight: 600; }
+
+  /* ─── BACKUP SECTION ─── */
+  .backup-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .backup-card { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); text-align: center; }
+  .backup-card .b-icon { font-size: 48px; margin-bottom: 14px; }
+  .backup-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .backup-card p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+
+  /* Announcement priority */
+  .priority-high { color: var(--danger); font-weight: 600; }
+  .priority-medium { color: var(--warning); font-weight: 600; }
+  .priority-low { color: var(--success); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="login-screen">
+
+  <!-- LEFT: Brand Panel with diagonal intersecting blue & gold -->
+  <div class="login-brand">
+    <div class="diag-blue"></div>
+    <div class="diag-gold"></div>
+    <div class="brand-content">
+      <div class="logo-ring">
+        <img src="./images/logo.png" alt="Assemblies of God Logo" />
+      </div>
+      <div class="brand-name">House of Glory</div>
+      <div class="brand-sub">Assemblies of God, Ghana</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Login Form Panel -->
+  <div class="login-form-panel">
+    <div class="login-card">
+      <div class="welcome-text">Welcome back!</div>
+      <h1>Sign In</h1>
+      <p class="login-subtitle">Enter your credentials to access the church management system</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="login-email" placeholder="admin@example.com" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;padding:12px 18px;font-size:15px;" id="login-btn">Sign In</button>
+        <div id="login-error" style="color:var(--danger);font-size:13px;margin-top:10px;display:none;"></div>
+      </form>
+      <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--border);">
+        <span style="color:var(--text-muted);font-size:12px;">House of Glory Church App &copy; 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ MAIN APP ══════════════ -->
+<div id="app" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div style="font-size:24px;margin-bottom:6px;">⛪</div>
+      <div class="church-name">House of Glory</div>
+      <div class="church-sub">Assemblies of God</div>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <div class="nav-item active" data-section="dashboard"><span class="nav-icon">📊</span> Dashboard</div>
+    <div class="nav-item" data-section="members"><span class="nav-icon">👥</span> Members</div>
+    <div class="nav-item" data-section="departments"><span class="nav-icon">🏢</span> Departments</div>
+
+    <div class="nav-section-label">Ministry</div>
+    <div class="nav-item" data-section="sermons"><span class="nav-icon">🎙️</span> Sermons</div>
+    <div class="nav-item" data-section="bible"><span class="nav-icon">📖</span> Bible</div>
+    <div class="nav-item" data-section="announcements"><span class="nav-icon">📢</span> Announcements</div>
+    <div class="nav-item" data-section="media"><span class="nav-icon">🎬</span> Media</div>
+
+    <div class="nav-section-label">Administration</div>
+    <div class="nav-item" data-section="finance"><span class="nav-icon">💰</span> Finance</div>
+    <div class="nav-item" data-section="backup"><span class="nav-icon">💾</span> Backup</div>
+    <div class="nav-item" data-section="settings"><span class="nav-icon">⚙️</span> Settings</div>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">👤</div>
+        <div>
+          <div id="sidebar-user-name" style="font-size:12px;color:white;font-weight:600;">Admin</div>
+          <div id="sidebar-user-email" class="user-email">—</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <div class="topbar">
+      <h2 id="section-title">Dashboard</h2>
+      <div class="topbar-actions" id="topbar-actions"></div>
+    </div>
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="section active" id="section-dashboard">
+        <div class="stat-cards" id="dash-stats">
+          <div class="stat-card"><div class="stat-icon red">👥</div><div><div class="stat-label">Total Members</div><div class="stat-value" id="ds-members">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon red">✅</div><div><div class="stat-label">Active Members</div><div class="stat-value" id="ds-active">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon green">💵</div><div><div class="stat-label">Monthly Income</div><div class="stat-value" id="ds-income">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon gold">💰</div><div><div class="stat-label">Balance</div><div class="stat-value" id="ds-balance">—</div></div></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="margin-bottom:14px;">🎙️ Recent Sermons</h3>
+            <div id="dash-sermons"><div class="loading">Loading…</div></div>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:14px;">📢 Announcements</h3>
+            <div id="dash-announcements"><div class="loading">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MEMBERS ── -->
+      <div class="section" id="section-members">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>All Members</h3>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <input type="text" class="search-box" placeholder="🔍 Search members…" oninput="filterTable('members-tbody', this.value, [0,1,2])" />
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Name</th><th>Phone</th><th>Gender</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="members-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── DEPARTMENTS ── -->
+      <div class="section" id="section-departments">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>Departments</h3>
+            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('dept-tbody', this.value, [0,1,2])" />
+          </div>
+          <table>
+            <thead><tr><th>Name</th><th>Leader</th><th>Meeting Day</th><th>Meeting Time</th><th>Description</th><th>Actions</th></tr></thead>
+            <tbody id="dept-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── FINANCE ── -->
+      <div class="section" id="section-finance">
+        <div class="stat-cards" style="grid-template-columns:repeat(4,1fr);">
+          <div class="stat-card"><div class="stat-icon green">📈</div><div><div class="stat-label">Total Income</div><div class="stat-value" id="fin-income">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon red">📉</div><div><div class="stat-label">Total Expenses</div><div class="stat-value" id="fin-expenses">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon gold">🙏</div><div><div class="stat-label">Total Tithes</div><div class="stat-value" id="fin-tithes">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon blue">⚖️</div><div><div class="stat-label">Balance</div><div class="stat-value" id="fin-balance">—</div></div></div>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('finance','transactions')">Transactions</div>
+          <div class="tab" onclick="switchTab('finance','tithes')">Tithes</div>
+        </div>
+        <div id="finance-tab-transactions">
+          <div class="table-wrapper">
+            <div class="table-header">
+              <h3>Transactions</h3>
+              <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('fin-tbody', this.value, [0,1,2])" />
+            </div>
+            <table>
+              <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount (GHS)</th><th>Actions</th></tr></thead>
+              <tbody id="fin-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="finance-tab-tithes" style="display:none;">
+          <div class="table-wrapper">
+            <div class="table-header">
+              <h3>Tithes</h3>
+              <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('tithes-tbody', this.value, [0,1,2])" />
+            </div>
+            <table>
+              <thead><tr><th>Date</th><th>Member</th><th>Amount (GHS)</th><th>Notes</th><th>Actions</th></tr></thead>
+              <tbody id="tithes-tbody"><tr><td colspan="5" class="loading">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SERMONS ── -->
+      <div class="section" id="section-sermons">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>Sermons</h3>
+            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('sermons-tbody', this.value, [0,1,2])" />
+          </div>
+          <table>
+            <thead><tr><th>Date</th><th>Title</th><th>Preacher</th><th>Scripture</th><th>Notes</th><th>Actions</th></tr></thead>
+            <tbody id="sermons-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── BIBLE ── -->
+      <div class="section" id="section-bible">
+        <div class="card">
+          <div class="bible-controls">
+            <select id="bible-book" onchange="loadChapters()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;"></select>
+            <select id="bible-chapter" onchange="loadBibleChapter()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;"></select>
+            <button class="btn btn-primary btn-sm" onclick="loadBibleChapter()">📖 Read</button>
+            <input type="text" id="bible-search-input" placeholder="Search scriptures…" style="flex:1;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;" />
+            <button class="btn btn-outline btn-sm" onclick="searchBible()">Search</button>
+          </div>
+          <div class="bible-text" id="bible-text"><div class="loading">Select a book and chapter to start reading.</div></div>
+        </div>
+        <div class="card" style="margin-top:0;">
+          <h3 style="margin-bottom:14px;">🔖 Bookmarks</h3>
+          <div id="bible-bookmarks"><div class="loading">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- ── ANNOUNCEMENTS ── -->
+      <div class="section" id="section-announcements">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>Announcements</h3>
+            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('ann-tbody', this.value, [0,1,2])" />
+          </div>
+          <table>
+            <thead><tr><th>Title</th><th>Message</th><th>Priority</th><th>Target</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="ann-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── MEDIA ── -->
+      <div class="section" id="section-media">
+        <div class="table-wrapper">
+          <div class="table-header">
+            <h3>Media Files</h3>
+            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('media-tbody', this.value, [0,1,2])" />
+          </div>
+          <table>
+            <thead><tr><th>Title</th><th>Type</th><th>Category</th><th>Description</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="media-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── BACKUP ── -->
+      <div class="section" id="section-backup">
+        <div class="backup-cards">
+          <div class="backup-card">
+            <div class="b-icon">☁️</div>
+            <h3>Create Backup</h3>
+            <p>Export all church data to a backup file. This includes members, finance records, sermons, and more.</p>
+            <button class="btn btn-primary" onclick="doBackupCreate()">Create Backup</button>
+          </div>
+          <div class="backup-card">
+            <div class="b-icon">📥</div>
+            <h3>Restore Backup</h3>
+            <p>Restore church data from a previously created backup file.</p>
+            <button class="btn btn-outline" onclick="doBackupRestore()">Restore Backup</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="section" id="section-settings">
+        <div class="card" style="max-width:480px;">
+          <h3 style="margin-bottom:20px;">🔐 Change Password</h3>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="cp-current" placeholder="Enter current password" />
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="cp-new" placeholder="Enter new password" />
+          </div>
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" id="cp-confirm" placeholder="Confirm new password" />
+          </div>
+          <button class="btn btn-primary" onclick="doChangePassword()">Update Password</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+</div><!-- /app -->
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- Member Modal -->
+<div class="modal-overlay" id="member-modal" style="display:none;" onclick="closeModalOnBg(event,'member-modal')">
+  <div class="modal modal-lg" onclick="event.stopPropagation()">
+    <h3 id="member-modal-title">Add Member</h3>
+    <input type="hidden" id="member-id" />
+    <div class="form-row">
+      <div class="form-group"><label>First Name *</label><input id="m-firstName" type="text" placeholder="First name" /></div>
+      <div class="form-group"><label>Last Name *</label><input id="m-lastName" type="text" placeholder="Last name" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Email</label><input id="m-email" type="email" placeholder="email@example.com" /></div>
+      <div class="form-group"><label>Phone Number</label><input id="m-phone" type="text" placeholder="+233..." /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>WhatsApp Number</label><input id="m-whatsapp" type="text" placeholder="+233..." /></div>
+      <div class="form-group"><label>Date of Birth</label><input id="m-dob" type="date" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Gender</label>
+        <select id="m-gender"><option value="">Select…</option><option>Male</option><option>Female</option></select>
+      </div>
+      <div class="form-group"><label>Category</label>
+        <select id="m-category"><option value="">Select…</option><option>Youth</option><option>Adult</option><option>Children</option><option>Senior</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Occupation / Department</label><input id="m-occupation" type="text" placeholder="Occupation or department" /></div>
+      <div class="form-group"><label>Role / Position</label><input id="m-role" type="text" placeholder="e.g. Choir Member" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Join Date</label><input id="m-joinDate" type="date" /></div>
+      <div class="form-group"><label>Status</label>
+        <select id="m-status"><option value="active">Active</option><option value="inactive">Inactive</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>Address</label><input id="m-address" type="text" placeholder="Home address" /></div>
+    <div class="form-group"><label>Notes</label><textarea id="m-notes" placeholder="Additional notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('member-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMember()">Save Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Department Modal -->
+<div class="modal-overlay" id="dept-modal" style="display:none;" onclick="closeModalOnBg(event,'dept-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="dept-modal-title">Add Department</h3>
+    <input type="hidden" id="dept-id" />
+    <div class="form-group"><label>Department Name *</label><input id="d-name" type="text" placeholder="e.g. Choir, Ushering" /></div>
+    <div class="form-group"><label>Leader</label><input id="d-leader" type="text" placeholder="Department head name" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>Meeting Day</label>
+        <select id="d-day"><option value="">Select…</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+      </div>
+      <div class="form-group"><label>Meeting Time</label><input id="d-time" type="time" /></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="d-desc" placeholder="Brief description…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('dept-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveDept()">Save Department</button>
+    </div>
+  </div>
+</div>
+
+<!-- Finance Modal -->
+<div class="modal-overlay" id="fin-modal" style="display:none;" onclick="closeModalOnBg(event,'fin-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="fin-modal-title">Add Transaction</h3>
+    <input type="hidden" id="fin-id" />
+    <div class="form-row">
+      <div class="form-group"><label>Type *</label>
+        <select id="f-type"><option value="income">Income</option><option value="expense">Expense</option></select>
+      </div>
+      <div class="form-group"><label>Amount (GHS) *</label><input id="f-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Category</label>
+        <select id="f-category"><option value="">Select…</option><option value="tithe">Tithe</option><option value="offering">Offering</option><option value="donation">Donation</option><option value="salary">Salary</option><option value="utilities">Utilities</option><option value="maintenance">Maintenance</option><option value="other">Other</option></select>
+      </div>
+      <div class="form-group"><label>Date *</label><input id="f-date" type="date" /></div>
+    </div>
+    <div class="form-group"><label>Description</label><input id="f-desc" type="text" placeholder="Short description…" /></div>
+    <div class="form-group"><label>Notes</label><textarea id="f-notes" placeholder="Additional notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('fin-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFin()">Save Transaction</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tithe Modal -->
+<div class="modal-overlay" id="tithe-modal" style="display:none;" onclick="closeModalOnBg(event,'tithe-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="tithe-modal-title">Add Tithe</h3>
+    <input type="hidden" id="tithe-id" />
+    <div class="form-row">
+      <div class="form-group"><label>Member Name *</label><input id="t-member" type="text" placeholder="Member name" /></div>
+      <div class="form-group"><label>Amount (GHS) *</label><input id="t-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
+    </div>
+    <div class="form-group"><label>Date *</label><input id="t-date" type="date" /></div>
+    <div class="form-group"><label>Notes</label><textarea id="t-notes" placeholder="Additional notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('tithe-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTithe()">Save Tithe</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sermon Modal -->
+<div class="modal-overlay" id="sermon-modal" style="display:none;" onclick="closeModalOnBg(event,'sermon-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="sermon-modal-title">Add Sermon</h3>
+    <input type="hidden" id="sermon-id" />
+    <div class="form-group"><label>Title *</label><input id="s-title" type="text" placeholder="Sermon title" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>Preacher *</label><input id="s-preacher" type="text" placeholder="Preacher name" /></div>
+      <div class="form-group"><label>Date *</label><input id="s-date" type="date" /></div>
+    </div>
+    <div class="form-group"><label>Scripture Reference</label><input id="s-scripture" type="text" placeholder="e.g. John 3:16" /></div>
+    <div class="form-group"><label>Notes / Summary</label><textarea id="s-notes" placeholder="Sermon notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('sermon-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSermon()">Save Sermon</button>
+    </div>
+  </div>
+</div>
+
+<!-- Announcement Modal -->
+<div class="modal-overlay" id="ann-modal" style="display:none;" onclick="closeModalOnBg(event,'ann-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="ann-modal-title">Add Announcement</h3>
+    <input type="hidden" id="ann-id" />
+    <div class="form-group"><label>Title *</label><input id="a-title" type="text" placeholder="Announcement title" /></div>
+    <div class="form-group"><label>Message *</label><textarea id="a-message" placeholder="Announcement message…"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Priority</label>
+        <select id="a-priority"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+      </div>
+      <div class="form-group"><label>Target Audience</label>
+        <select id="a-target"><option value="all">All Members</option><option value="youth">Youth</option><option value="adults">Adults</option><option value="children">Children</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('ann-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAnn()">Save Announcement</button>
+    </div>
+  </div>
+</div>
+
+<!-- Media Upload Modal -->
+<div class="modal-overlay" id="media-modal" style="display:none;" onclick="closeModalOnBg(event,'media-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Upload Media</h3>
+    <div class="form-group"><label>Title *</label><input id="med-title" type="text" placeholder="Media title" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>Type</label>
+        <select id="med-type"><option value="video">Video</option><option value="audio">Audio</option><option value="image">Image</option><option value="document">Document</option></select>
+      </div>
+      <div class="form-group"><label>Category</label>
+        <select id="med-category"><option value="sermon">Sermon</option><option value="worship">Worship</option><option value="event">Event</option><option value="other">Other</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>URL / File Path</label><input id="med-url" type="text" placeholder="https://... or local path" /></div>
+    <div class="form-group"><label>Description</label><textarea id="med-desc" placeholder="Brief description…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('media-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMedia()">Upload</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal" style="display:none;">
+  <div class="modal" style="width:360px;text-align:center;" onclick="event.stopPropagation()">
+    <div style="font-size:40px;margin-bottom:14px;">⚠️</div>
+    <h3 id="confirm-title" style="margin-bottom:8px;">Confirm Delete</h3>
+    <p id="confirm-msg" style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Are you sure you want to delete this item? This cannot be undone.</p>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn btn-outline" onclick="closeModal('confirm-modal')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════════
+const api = window.electronAPI;
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast-item ${type}`;
+  el.textContent = msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+function fmt(amount) {
+  return 'GHS ' + parseFloat(amount || 0).toLocaleString('en-GH', { minimumFractionDigits: 2 });
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('en-GB'); } catch { return d; }
+}
+
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function closeModalOnBg(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+function filterTable(tbodyId, val, cols) {
+  const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+  const lower = val.toLowerCase();
+  rows.forEach(r => {
+    const cells = r.querySelectorAll('td');
+    const match = cols.some(i => cells[i] && cells[i].textContent.toLowerCase().includes(lower));
+    r.style.display = val === '' || match ? '' : 'none';
+  });
+}
+
+function switchTab(section, tab) {
+  if (section === 'finance') {
+    document.getElementById('finance-tab-transactions').style.display = tab === 'transactions' ? '' : 'none';
+    document.getElementById('finance-tab-tithes').style.display = tab === 'tithes' ? '' : 'none';
+    document.querySelectorAll('#section-finance .tab').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 && tab === 'transactions') || (i === 1 && tab === 'tithes'));
+    });
+    if (tab === 'tithes') loadTithes();
+  }
+}
+
+function confirm(title, msg, callback) {
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-modal').style.display = 'flex';
+  const btn = document.getElementById('confirm-ok-btn');
+  btn.onclick = () => { closeModal('confirm-modal'); callback(); };
+}
+
+function setTopbarActions(html) { document.getElementById('topbar-actions').innerHTML = html; }
+
+// ═══════════════════════════════════════════════════════════════════
+// LOGIN / AUTH
+// ═══════════════════════════════════════════════════════════════════
+let currentUser = null;
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('login-btn');
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  try {
+    const res = await api.auth.login({ email: document.getElementById('login-email').value, password: document.getElementById('login-password').value });
+    if (res.success) {
+      currentUser = res.user;
+      showApp();
+    } else {
+      err.textContent = res.message || 'Login failed.';
+      err.style.display = 'block';
+    }
+  } catch (ex) {
+    err.textContent = 'Connection error. Check your internet.';
+    err.style.display = 'block';
+  }
+  btn.textContent = 'Sign In';
+  btn.disabled = false;
+});
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('sidebar-user-email').textContent = currentUser.email;
+  document.getElementById('sidebar-user-name').textContent = currentUser.role || 'User';
+  navigateTo('dashboard');
+}
+
+async function doLogout() {
+  await api.auth.logout();
+  currentUser = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+// Check if already logged in
+(async () => {
+  try {
+    const res = await api.auth.check();
+    if (res.isAuthenticated) {
+      currentUser = res.user;
+      showApp();
+    }
+  } catch {}
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════
+const sectionTitles = {
+  dashboard: '📊 Dashboard', members: '👥 Members', departments: '🏢 Departments',
+  finance: '💰 Finance', sermons: '🎙️ Sermons', bible: '📖 Bible',
+  announcements: '📢 Announcements', media: '🎬 Media', backup: '💾 Backup', settings: '⚙️ Settings'
+};
+
+function navigateTo(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('section-' + name);
+  if (sec) sec.classList.add('active');
+  const nav = document.querySelector(`.nav-item[data-section="${name}"]`);
+  if (nav) nav.classList.add('active');
+  document.getElementById('section-title').textContent = sectionTitles[name] || name;
+  setTopbarActions('');
+  const loaders = { dashboard: loadDashboard, members: loadMembers, departments: loadDepts, finance: loadFinance, sermons: loadSermons, bible: loadBible, announcements: loadAnn, media: loadMedia };
+  if (loaders[name]) loaders[name]();
+  // Add Action buttons
+  const addBtns = {
+    members: `<button class="btn btn-primary" onclick="openMemberModal()">+ Add Member</button>`,
+    departments: `<button class="btn btn-primary" onclick="openDeptModal()">+ Add Department</button>`,
+    finance: `<button class="btn btn-primary" onclick="openFinModal()">+ Add Transaction</button><button class="btn btn-outline" onclick="openTitheModal()" style="margin-left:6px;">+ Add Tithe</button>`,
+    sermons: `<button class="btn btn-primary" onclick="openSermonModal()">+ Add Sermon</button>`,
+    announcements: `<button class="btn btn-primary" onclick="openAnnModal()">+ Add Announcement</button>`,
+    media: `<button class="btn btn-primary" onclick="openMediaModal()">+ Upload Media</button>`,
+  };
+  if (addBtns[name]) setTopbarActions(addBtns[name]);
+}
+
+document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => navigateTo(n.dataset.section)));
+
+// ═══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+async function loadDashboard() {
+  try {
+    const stats = await api.dashboard.getStats();
+    if (stats) {
+      document.getElementById('ds-members').textContent = stats.memberCount ?? '—';
+      document.getElementById('ds-active').textContent = stats.activeMembers ?? '—';
+      document.getElementById('ds-income').textContent = fmt(stats.monthlyIncome || 0);
+      document.getElementById('ds-balance').textContent = fmt(stats.balance || 0);
+      const sEl = document.getElementById('dash-sermons');
+      if (stats.recentSermons && stats.recentSermons.length) {
+        sEl.innerHTML = stats.recentSermons.map(s => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><strong>${s.title || 'Untitled'}</strong><br><span style="color:var(--text-muted)">${s.preacher || ''} · ${fmtDate(s.date)}</span></div>`).join('');
+      } else { sEl.innerHTML = '<div class="empty-state"><p>No sermons yet.</p></div>'; }
+      const aEl = document.getElementById('dash-announcements');
+      if (stats.upcomingAnnouncements && stats.upcomingAnnouncements.length) {
+        aEl.innerHTML = stats.upcomingAnnouncements.map(a => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><strong>${a.title || 'Untitled'}</strong><br><span style="color:var(--text-muted)">${(a.message||'').substring(0,60)}…</span></div>`).join('');
+      } else { aEl.innerHTML = '<div class="empty-state"><p>No announcements yet.</p></div>'; }
+    }
+  } catch (e) { console.error(e); toast('Failed to load dashboard', 'error'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MEMBERS
+// ═══════════════════════════════════════════════════════════════════
+let membersCache = [];
+
+async function loadMembers() {
+  const tbody = document.getElementById('members-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  try {
+    membersCache = await api.members.getAll() || [];
+    renderMembers(membersCache);
+  } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load members.</td></tr>'; }
+}
+
+function renderMembers(list) {
+  const tbody = document.getElementById('members-tbody');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">👥</div><p>No members found. Add your first member!</p></div></td></tr>'; return; }
+  tbody.innerHTML = list.map(m => `
+    <tr>
+      <td><strong>${m.fullName || '—'}</strong><br><span style="color:var(--text-muted);font-size:11px;">${m.email || ''}</span></td>
+      <td>${m.phoneNumber || '—'}</td>
+      <td>${m.gender || '—'}</td>
+      <td><span class="badge badge-info">${m.category || '—'}</span></td>
+      <td><span class="badge ${m.status === 'active' ? 'badge-success' : 'badge-muted'}">${m.status || '—'}</span></td>
+      <td><div class="actions-col">
+        <button class="btn-icon" onclick="openMemberModal(${JSON.stringify(m).replace(/"/g, '&quot;')})">✏️</button>
+        <button class="btn-icon danger" onclick="deleteMember('${m.id}','${(m.fullName||'').replace(/'/g,"\\'")}')">🗑️</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function openMemberModal(member) {
+  const isEdit = !!member;
+  document.getElementById('member-modal-title').textContent = isEdit ? 'Edit Member' : 'Add Member';
+  document.getElementById('member-id').value = isEdit ? member.id : '';
+  const fields = { 'm-firstName': isEdit ? member.firstName : '', 'm-lastName': isEdit ? member.lastName : '', 'm-email': isEdit ? member.email : '', 'm-phone': isEdit ? member.phoneNumber : '', 'm-whatsapp': isEdit ? member.whatsappNumber : '', 'm-dob': isEdit ? member.dateOfBirth : '', 'm-gender': isEdit ? member.gender : '', 'm-category': isEdit ? member.category : '', 'm-occupation': isEdit ? member.occupation : '', 'm-role': isEdit ? member.rolePosition : '', 'm-joinDate': isEdit ? member.joinDate : '', 'm-status': isEdit ? (member.status || 'active') : 'active', 'm-address': isEdit ? member.address : '', 'm-notes': isEdit ? member.notes : '' };
+  Object.entries(fields).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.value = val || ''; });
+  document.getElementById('member-modal').style.display = 'flex';
+}
+
+async function saveMember() {
+  const id = document.getElementById('member-id').value;
+  const data = { firstName: document.getElementById('m-firstName').value.trim(), lastName: document.getElementById('m-lastName').value.trim(), email: document.getElementById('m-email').value.trim(), phoneNumber: document.getElementById('m-phone').value.trim(), whatsappNumber: document.getElementById('m-whatsapp').value.trim(), dateOfBirth: document.getElementById('m-dob').value, gender: document.getElementById('m-gender').value, category: document.getElementById('m-category').value, occupation: document.getElementById('m-occupation').value.trim(), rolePosition: document.getElementById('m-role').value.trim(), joinDate: document.getElementById('m-joinDate').value, status: document.getElementById('m-status').value, address: document.getElementById('m-address').value.trim(), notes: document.getElementById('m-notes').value.trim() };
+  if (!data.firstName || !data.lastName) { toast('First and last name are required.', 'error'); return; }
+  try {
+    let res = id ? await api.members.update(id, data) : await api.members.create(data);
+    if (res && res.success !== false) { toast(id ? 'Member updated!' : 'Member added!', 'success'); closeModal('member-modal'); loadMembers(); }
+    else toast(res?.message || 'Failed to save member.', 'error');
+  } catch (e) { toast('Error saving member.', 'error'); }
+}
+
+async function deleteMember(id, name) {
+  confirm('Delete Member', `Delete "${name}"? This cannot be undone.`, async () => {
+    try { const res = await api.members.delete(id); if (res?.success !== false) { toast('Member deleted.', 'success'); loadMembers(); } else toast(res?.message || 'Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DEPARTMENTS
+// ═══════════════════════════════════════════════════════════════════
+async function loadDepts() {
+  const tbody = document.getElementById('dept-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  try {
+    const list = await api.departments.getAll() || [];
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">🏢</div><p>No departments yet.</p></div></td></tr>'; return; }
+    tbody.innerHTML = list.map(d => `
+      <tr>
+        <td><strong>${d.name || '—'}</strong></td>
+        <td>${d.leader || '—'}</td>
+        <td>${d.meetingDay || '—'}</td>
+        <td>${d.meetingTime || '—'}</td>
+        <td>${(d.description || '').substring(0,50)}</td>
+        <td><div class="actions-col">
+          <button class="btn-icon" onclick="openDeptModal(${JSON.stringify(d).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon danger" onclick="deleteDept('${d.id}','${(d.name||'').replace(/'/g,"\\'")}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
+}
+
+function openDeptModal(dept) {
+  const isEdit = !!dept;
+  document.getElementById('dept-modal-title').textContent = isEdit ? 'Edit Department' : 'Add Department';
+  document.getElementById('dept-id').value = isEdit ? dept.id : '';
+  document.getElementById('d-name').value = isEdit ? dept.name || '' : '';
+  document.getElementById('d-leader').value = isEdit ? dept.leader || '' : '';
+  document.getElementById('d-day').value = isEdit ? dept.meetingDay || '' : '';
+  document.getElementById('d-time').value = isEdit ? dept.meetingTime || '' : '';
+  document.getElementById('d-desc').value = isEdit ? dept.description || '' : '';
+  document.getElementById('dept-modal').style.display = 'flex';
+}
+
+async function saveDept() {
+  const id = document.getElementById('dept-id').value;
+  const data = { name: document.getElementById('d-name').value.trim(), leader: document.getElementById('d-leader').value.trim(), meetingDay: document.getElementById('d-day').value, meetingTime: document.getElementById('d-time').value, description: document.getElementById('d-desc').value.trim() };
+  if (!data.name) { toast('Department name is required.', 'error'); return; }
+  try {
+    let res = id ? await api.departments.update(id, data) : await api.departments.create(data);
+    if (res?.success !== false) { toast(id ? 'Department updated!' : 'Department added!', 'success'); closeModal('dept-modal'); loadDepts(); }
+    else toast(res?.message || 'Failed.', 'error');
+  } catch { toast('Error saving department.', 'error'); }
+}
+
+async function deleteDept(id, name) {
+  confirm('Delete Department', `Delete "${name}"?`, async () => {
+    try { const res = await api.departments.delete(id); if (res?.success !== false) { toast('Deleted.', 'success'); loadDepts(); } else toast(res?.message || 'Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FINANCE
+// ═══════════════════════════════════════════════════════════════════
+async function loadFinance() {
+  try {
+    const stats = await api.finance.getStats();
+    if (stats?.data) {
+      document.getElementById('fin-income').textContent = fmt(stats.data.totalIncome);
+      document.getElementById('fin-expenses').textContent = fmt(stats.data.totalExpenses);
+      document.getElementById('fin-tithes').textContent = fmt(stats.data.totalTithes);
+      document.getElementById('fin-balance').textContent = fmt(stats.data.balance);
+    }
+    const list = await api.finance.getAll() || [];
+    const tbody = document.getElementById('fin-tbody');
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>No transactions yet.</p></div></td></tr>'; return; }
+    tbody.innerHTML = list.map(t => `
+      <tr>
+        <td>${fmtDate(t.date)}</td>
+        <td><span class="finance-type-${t.type}">${t.type || '—'}</span></td>
+        <td>${t.category || '—'}</td>
+        <td>${t.description || '—'}</td>
+        <td><strong>${fmt(t.amount)}</strong></td>
+        <td><div class="actions-col">
+          <button class="btn-icon" onclick="openFinModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon danger" onclick="deleteFin('${t.id}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  } catch { toast('Failed to load finance.', 'error'); }
+}
+
+async function loadTithes() {
+  const tbody = document.getElementById('tithes-tbody');
+  tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading…</td></tr>';
+  try {
+    const list = await api.finance.getTithes() || [];
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><p>No tithes recorded.</p></div></td></tr>'; return; }
+    tbody.innerHTML = list.map(t => `
+      <tr>
+        <td>${fmtDate(t.date)}</td>
+        <td>${t.memberName || t.member || '—'}</td>
+        <td><strong>${fmt(t.amount)}</strong></td>
+        <td>${t.notes || '—'}</td>
+        <td><div class="actions-col">
+          <button class="btn-icon" onclick="openTitheModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon danger" onclick="deleteTithe('${t.id}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="5" class="loading">Failed to load.</td></tr>'; }
+}
+
+function openFinModal(t) {
+  const isEdit = !!t;
+  document.getElementById('fin-modal-title').textContent = isEdit ? 'Edit Transaction' : 'Add Transaction';
+  document.getElementById('fin-id').value = isEdit ? t.id : '';
+  document.getElementById('f-type').value = isEdit ? (t.type || 'income') : 'income';
+  document.getElementById('f-amount').value = isEdit ? (t.amount || '') : '';
+  document.getElementById('f-category').value = isEdit ? (t.category || '') : '';
+  document.getElementById('f-date').value = isEdit ? (t.date ? t.date.substring(0,10) : '') : new Date().toISOString().substring(0,10);
+  document.getElementById('f-desc').value = isEdit ? (t.description || '') : '';
+  document.getElementById('f-notes').value = isEdit ? (t.notes || '') : '';
+  document.getElementById('fin-modal').style.display = 'flex';
+}
+
+async function saveFin() {
+  const id = document.getElementById('fin-id').value;
+  const data = { type: document.getElementById('f-type').value, amount: parseFloat(document.getElementById('f-amount').value), category: document.getElementById('f-category').value, date: document.getElementById('f-date').value, description: document.getElementById('f-desc').value.trim(), notes: document.getElementById('f-notes').value.trim() };
+  if (!data.amount || !data.date) { toast('Amount and date are required.', 'error'); return; }
+  try {
+    let res = id ? await api.finance.update(id, data) : await api.finance.create(data);
+    if (res?.success !== false) { toast(id ? 'Transaction updated!' : 'Transaction added!', 'success'); closeModal('fin-modal'); loadFinance(); }
+    else toast(res?.message || 'Failed.', 'error');
+  } catch { toast('Error.', 'error'); }
+}
+
+async function deleteFin(id) {
+  confirm('Delete Transaction', 'Delete this transaction?', async () => {
+    try { const res = await api.finance.delete(id); if (res?.success !== false) { toast('Deleted.', 'success'); loadFinance(); } else toast('Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+function openTitheModal(t) {
+  const isEdit = !!t;
+  document.getElementById('tithe-modal-title').textContent = isEdit ? 'Edit Tithe' : 'Add Tithe';
+  document.getElementById('tithe-id').value = isEdit ? t.id : '';
+  document.getElementById('t-member').value = isEdit ? (t.memberName || t.member || '') : '';
+  document.getElementById('t-amount').value = isEdit ? (t.amount || '') : '';
+  document.getElementById('t-date').value = isEdit ? (t.date ? t.date.substring(0,10) : '') : new Date().toISOString().substring(0,10);
+  document.getElementById('t-notes').value = isEdit ? (t.notes || '') : '';
+  document.getElementById('tithe-modal').style.display = 'flex';
+}
+
+async function saveTithe() {
+  const id = document.getElementById('tithe-id').value;
+  const data = { memberName: document.getElementById('t-member').value.trim(), amount: parseFloat(document.getElementById('t-amount').value), date: document.getElementById('t-date').value, notes: document.getElementById('t-notes').value.trim() };
+  if (!data.memberName || !data.amount) { toast('Member name and amount are required.', 'error'); return; }
+  try {
+    let res = id ? await api.finance.updateTithe(id, data) : await api.finance.addTithe(data);
+    if (res?.success !== false) { toast(id ? 'Tithe updated!' : 'Tithe added!', 'success'); closeModal('tithe-modal'); loadTithes(); }
+    else toast(res?.message || 'Failed.', 'error');
+  } catch { toast('Error.', 'error'); }
+}
+
+async function deleteTithe(id) {
+  confirm('Delete Tithe', 'Delete this tithe record?', async () => {
+    try { const res = await api.finance.deleteTithe(id); if (res?.success !== false) { toast('Deleted.', 'success'); loadTithes(); } else toast('Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SERMONS
+// ═══════════════════════════════════════════════════════════════════
+async function loadSermons() {
+  const tbody = document.getElementById('sermons-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  try {
+    const list = await api.sermons.getAll() || [];
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">🎙️</div><p>No sermons yet.</p></div></td></tr>'; return; }
+    tbody.innerHTML = list.map(s => `
+      <tr>
+        <td>${fmtDate(s.date)}</td>
+        <td><strong>${s.title || '—'}</strong></td>
+        <td>${s.preacher || '—'}</td>
+        <td>${s.scripture || '—'}</td>
+        <td>${(s.notes||'').substring(0,50)}${s.notes&&s.notes.length>50?'…':''}</td>
+        <td><div class="actions-col">
+          <button class="btn-icon" onclick="openSermonModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon danger" onclick="deleteSermon('${s.id}','${(s.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
+}
+
+function openSermonModal(s) {
+  const isEdit = !!s;
+  document.getElementById('sermon-modal-title').textContent = isEdit ? 'Edit Sermon' : 'Add Sermon';
+  document.getElementById('sermon-id').value = isEdit ? s.id : '';
+  document.getElementById('s-title').value = isEdit ? s.title||'' : '';
+  document.getElementById('s-preacher').value = isEdit ? s.preacher||'' : '';
+  document.getElementById('s-date').value = isEdit ? (s.date?s.date.substring(0,10):'') : new Date().toISOString().substring(0,10);
+  document.getElementById('s-scripture').value = isEdit ? s.scripture||'' : '';
+  document.getElementById('s-notes').value = isEdit ? s.notes||'' : '';
+  document.getElementById('sermon-modal').style.display = 'flex';
+}
+
+async function saveSermon() {
+  const id = document.getElementById('sermon-id').value;
+  const data = { title: document.getElementById('s-title').value.trim(), preacher: document.getElementById('s-preacher').value.trim(), date: document.getElementById('s-date').value, scripture: document.getElementById('s-scripture').value.trim(), notes: document.getElementById('s-notes').value.trim() };
+  if (!data.title || !data.preacher) { toast('Title and preacher are required.', 'error'); return; }
+  try {
+    let res = id ? await api.sermons.update(id, data) : await api.sermons.create(data);
+    if (res?.success !== false) { toast(id ? 'Sermon updated!' : 'Sermon added!', 'success'); closeModal('sermon-modal'); loadSermons(); }
+    else toast(res?.message || 'Failed.', 'error');
+  } catch { toast('Error.', 'error'); }
+}
+
+async function deleteSermon(id, name) {
+  confirm('Delete Sermon', `Delete "${name}"?`, async () => {
+    try { const res = await api.sermons.delete(id); if (res?.success !== false) { toast('Deleted.', 'success'); loadSermons(); } else toast('Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// BIBLE
+// ═══════════════════════════════════════════════════════════════════
+let bibleBooks = [];
+
+async function loadBible() {
+  try {
+    bibleBooks = await api.bible.getBooks() || [];
+    const sel = document.getElementById('bible-book');
+    sel.innerHTML = bibleBooks.map((b, i) => `<option value="${i}">${b.name || b}</option>`).join('');
+    if (bibleBooks.length) loadChapters();
+    loadBookmarks();
+  } catch { document.getElementById('bible-text').innerHTML = '<div class="empty-state"><p>Bible not available. Check connection.</p></div>'; }
+}
+
+function loadChapters() {
+  const bookIdx = parseInt(document.getElementById('bible-book').value);
+  const book = bibleBooks[bookIdx];
+  const chapters = book?.chapters || book?.chapter_count || 50;
+  const count = typeof chapters === 'number' ? chapters : (Array.isArray(chapters) ? chapters.length : 50);
+  const sel = document.getElementById('bible-chapter');
+  sel.innerHTML = Array.from({length: count}, (_, i) => `<option value="${i+1}">Chapter ${i+1}</option>`).join('');
+}
+
+async function loadBibleChapter() {
+  const bookIdx = parseInt(document.getElementById('bible-book').value);
+  const book = bibleBooks[bookIdx];
+  const chapter = parseInt(document.getElementById('bible-chapter').value);
+  const bookName = book?.name || book;
+  document.getElementById('bible-text').innerHTML = '<div class="loading">Loading…</div>';
+  try {
+    const data = await api.bible.getChapter(bookName, chapter);
+    if (data && data.verses) {
+      document.getElementById('bible-text').innerHTML = `<h3 style="margin-bottom:16px;color:var(--primary)">${bookName} ${chapter}</h3>` + data.verses.map(v => `<div class="verse"><span class="verse-num">${v.verse || v.num || v.v}</span>${v.text || v.t || ''}</div>`).join('');
+    } else if (Array.isArray(data)) {
+      document.getElementById('bible-text').innerHTML = `<h3 style="margin-bottom:16px;color:var(--primary)">${bookName} ${chapter}</h3>` + data.map(v => `<div class="verse"><span class="verse-num">${v.verse||v.v||''}</span>${v.text||v.t||''}</div>`).join('');
+    } else {
+      document.getElementById('bible-text').innerHTML = '<div class="empty-state"><p>Chapter not available.</p></div>';
+    }
+  } catch { document.getElementById('bible-text').innerHTML = '<div class="empty-state"><p>Failed to load chapter.</p></div>'; }
+}
+
+async function searchBible() {
+  const q = document.getElementById('bible-search-input').value.trim();
+  if (!q) return;
+  document.getElementById('bible-text').innerHTML = '<div class="loading">Searching…</div>';
+  try {
+    const results = await api.bible.search(q) || [];
+    if (!results.length) { document.getElementById('bible-text').innerHTML = '<div class="empty-state"><p>No results found.</p></div>'; return; }
+    document.getElementById('bible-text').innerHTML = `<h3 style="margin-bottom:12px;color:var(--primary)">Results for "${q}"</h3>` + results.map(r => `<div class="verse" style="padding:6px 0;border-bottom:1px solid var(--border);"><span class="verse-num">${r.reference||''}</span>${r.text||r.t||''}</div>`).join('');
+  } catch { document.getElementById('bible-text').innerHTML = '<div class="empty-state"><p>Search failed.</p></div>'; }
+}
+
+async function loadBookmarks() {
+  try {
+    const bms = await api.bible.getBookmarks() || [];
+    const el = document.getElementById('bible-bookmarks');
+    if (!bms.length) { el.innerHTML = '<div class="empty-state"><p>No bookmarks yet.</p></div>'; return; }
+    el.innerHTML = bms.map(b => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><span>${b.reference || b.book}</span><button class="btn-icon danger" onclick="removeBookmark('${b.id}')">🗑️</button></div>`).join('');
+  } catch {}
+}
+
+async function removeBookmark(id) {
+  try { await api.bible.removeBookmark(id); loadBookmarks(); toast('Bookmark removed.', 'info'); } catch {}
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ANNOUNCEMENTS
+// ═══════════════════════════════════════════════════════════════════
+async function loadAnn() {
+  const tbody = document.getElementById('ann-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  try {
+    const list = await api.announcements.getAll() || [];
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">📢</div><p>No announcements yet.</p></div></td></tr>'; return; }
+    tbody.innerHTML = list.map(a => `
+      <tr>
+        <td><strong>${a.title || '—'}</strong></td>
+        <td>${(a.message||'').substring(0,60)}${a.message&&a.message.length>60?'…':''}</td>
+        <td><span class="priority-${a.priority||'low'}">${(a.priority||'low').toUpperCase()}</span></td>
+        <td>${a.targetAudience || a.target || 'All'}</td>
+        <td>${fmtDate(a.createdAt)}</td>
+        <td><div class="actions-col">
+          <button class="btn-icon" onclick="openAnnModal(${JSON.stringify(a).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon danger" onclick="deleteAnn('${a.id}','${(a.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
+}
+
+function openAnnModal(a) {
+  const isEdit = !!a;
+  document.getElementById('ann-modal-title').textContent = isEdit ? 'Edit Announcement' : 'Add Announcement';
+  document.getElementById('ann-id').value = isEdit ? a.id : '';
+  document.getElementById('a-title').value = isEdit ? a.title||'' : '';
+  document.getElementById('a-message').value = isEdit ? a.message||'' : '';
+  document.getElementById('a-priority').value = isEdit ? a.priority||'low' : 'low';
+  document.getElementById('a-target').value = isEdit ? (a.targetAudience||a.target||'all') : 'all';
+  document.getElementById('ann-modal').style.display = 'flex';
+}
+
+async function saveAnn() {
+  const id = document.getElementById('ann-id').value;
+  const data = { title: document.getElementById('a-title').value.trim(), message: document.getElementById('a-message').value.trim(), priority: document.getElementById('a-priority').value, targetAudience: document.getElementById('a-target').value };
+  if (!data.title || !data.message) { toast('Title and message are required.', 'error'); return; }
+  try {
+    let res = id ? await api.announcements.update(id, data) : await api.announcements.create(data);
+    if (res?.success !== false) { toast(id ? 'Updated!' : 'Announcement added!', 'success'); closeModal('ann-modal'); loadAnn(); }
+    else toast(res?.message || 'Failed.', 'error');
+  } catch { toast('Error.', 'error'); }
+}
+
+async function deleteAnn(id, name) {
+  confirm('Delete Announcement', `Delete "${name}"?`, async () => {
+    try { const res = await api.announcements.delete(id); if (res?.success !== false) { toast('Deleted.', 'success'); loadAnn(); } else toast('Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MEDIA
+// ═══════════════════════════════════════════════════════════════════
+async function loadMedia() {
+  const tbody = document.getElementById('media-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  try {
+    const list = await api.media.getAll() || [];
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">🎬</div><p>No media files yet.</p></div></td></tr>'; return; }
+    const typeIcons = { video:'🎬', audio:'🎵', image:'🖼️', document:'📄' };
+    tbody.innerHTML = list.map(m => `
+      <tr>
+        <td><strong>${m.title || '—'}</strong></td>
+        <td>${typeIcons[m.type]||'📎'} ${m.type||'—'}</td>
+        <td>${m.category||'—'}</td>
+        <td>${(m.description||'').substring(0,50)}</td>
+        <td>${fmtDate(m.createdAt||m.uploadedAt)}</td>
+        <td><div class="actions-col">
+          <button class="btn-icon danger" onclick="deleteMedia('${m.id}','${(m.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
+}
+
+function openMediaModal() {
+  ['med-title','med-url','med-desc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('med-type').value = 'video';
+  document.getElementById('med-category').value = 'sermon';
+  document.getElementById('media-modal').style.display = 'flex';
+}
+
+async function saveMedia() {
+  const data = { title: document.getElementById('med-title').value.trim(), type: document.getElementById('med-type').value, category: document.getElementById('med-category').value, url: document.getElementById('med-url').value.trim(), description: document.getElementById('med-desc').value.trim() };
+  if (!data.title) { toast('Title is required.', 'error'); return; }
+  try {
+    let res = await api.media.upload(data);
+    if (res?.success !== false) { toast('Media uploaded!', 'success'); closeModal('media-modal'); loadMedia(); }
+    else toast(res?.message || 'Failed.', 'error');
+  } catch { toast('Error.', 'error'); }
+}
+
+async function deleteMedia(id, name) {
+  confirm('Delete Media', `Delete "${name}"?`, async () => {
+    try { const res = await api.media.delete(id); if (res?.success !== false) { toast('Deleted.', 'success'); loadMedia(); } else toast('Failed.', 'error'); } catch { toast('Error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// BACKUP
+// ═══════════════════════════════════════════════════════════════════
+async function doBackupCreate() {
+  toast('Creating backup…', 'info');
+  try {
+    const res = await api.backup.create();
+    if (res?.success !== false) toast('Backup created successfully!', 'success');
+    else toast(res?.message || 'Backup failed.', 'error');
+  } catch { toast('Backup error.', 'error'); }
+}
+
+async function doBackupRestore() {
+  confirm('Restore Backup', 'This will overwrite current data. Are you sure?', async () => {
+    toast('Restoring backup…', 'info');
+    try {
+      const res = await api.backup.restore();
+      if (res?.success !== false) toast('Backup restored!', 'success');
+      else toast(res?.message || 'Restore failed.', 'error');
+    } catch { toast('Restore error.', 'error'); }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════════
+async function doChangePassword() {
+  const current = document.getElementById('cp-current').value;
+  const newPass = document.getElementById('cp-new').value;
+  const confirm2 = document.getElementById('cp-confirm').value;
+  if (!current || !newPass || !confirm2) { toast('All fields are required.', 'error'); return; }
+  if (newPass !== confirm2) { toast('New passwords do not match.', 'error'); return; }
+  if (newPass.length < 6) { toast('Password must be at least 6 characters.', 'error'); return; }
+  try {
+    const res = await api.auth.changePassword({ currentPassword: current, newPassword: newPass });
+    if (res?.success !== false) { toast('Password changed successfully!', 'success'); ['cp-current','cp-new','cp-confirm'].forEach(id => document.getElementById(id).value = ''); }
+    else toast(res?.message || 'Failed to change password.', 'error');
+  } catch { toast('Error changing password.', 'error'); }
+}
+</script>
+</body>
+</html>
