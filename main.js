@@ -75,14 +75,10 @@ mainWindow.once('ready-to-show', () => {
   mainWindow.show();
 });
 
-// In development, load from Vite dev server
-if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
-  mainWindow.loadURL('http://localhost:5173');
-  // mainWindow.webContents.openDevTools();
-} else {
-  // In production, load from built files
-  mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
-}
+// Load the local index.html file
+mainWindow.loadFile(path.join(__dirname, 'index.html'));
+// Uncomment to open DevTools for debugging:
+// mainWindow.webContents.openDevTools();
 
 mainWindow.on('closed', () => {
   mainWindow = null;

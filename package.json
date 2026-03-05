@@ -6,8 +6,9 @@
   "author": "House of Glory",
   "license": "MIT",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron .",
+    "start": "electronmon .",
+    "dev": "electronmon .",
+    "start:prod": "electron .",
     "build": "electron-builder",
     "pack": "electron-builder --dir"
   },
@@ -17,7 +18,8 @@
   },
   "devDependencies": {
     "electron": "^32.2.5",
-    "electron-builder": "^25.1.8"
+    "electron-builder": "^25.1.8",
+    "electronmon": "^2.0.4"
   },
   "build": {
     "appId": "com.houseofglory.churchapp",

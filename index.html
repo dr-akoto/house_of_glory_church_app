@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>House of Glory Church App</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <style>
   :root {
     --primary: #003DA5;
@@ -70,14 +71,15 @@
     80% { transform: translateY(0); }
     90% { transform: translateY(-4px); }
   }
-  .login-brand .brand-name { color: #003DA5; font-size: 30px; font-weight: 800; text-shadow: 0 2px 8px rgba(255,255,255,0.3); letter-spacing: 0.5px; }
-  .login-brand .brand-sub { color: #003DA5; font-size: 14px; font-weight: 600; margin-top: 6px; text-shadow: 0 2px 8px rgba(255,255,255,0.3); letter-spacing: 1px; text-transform: uppercase; }
+  
+  .login-brand .brand-name { color: #e8f8f1; font-size: 30px; font-weight: 800; margin: left 5px; ; text-shadow: 0 2px 8px rgba(255,255,255,0.3); letter-spacing: 0.5px; background-color: #003DA5; }
+  .login-brand .brand-sub { color: #e8f8f1; font-size: 14px; font-weight: 600; margin-top: 6px; text-shadow: 0 2px 8px rgba(255,255,255,0.3); letter-spacing: 1px; text-transform: uppercase; background-color: #003DA5; }
 
   .login-form-panel {
     flex: 1; display: flex; align-items: center; justify-content: center;
     background: #f8f9fb; padding: 40px;
   }
-  .login-card { background: white; border-radius: 16px; padding: 48px 40px; width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); text-align: center; }
+  .login-card { background: white; border-radius: 16px; padding: 48px 40px; width: 400px; box-shadow: 0 10px 45px rgba(0,0,0,0.08); text-align: center; }
   .login-card h1 { font-size: 24px; color: var(--primary); font-weight: 800; margin-bottom: 4px; }
   .login-card .login-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
   .login-card .welcome-text { font-size: 15px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
@@ -89,7 +91,9 @@
 
   /* ─── SIDEBAR ─── */
   #sidebar { width: 220px; background: var(--sidebar-bg); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
-  .sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; }
+  .sidebar-header .sidebar-logo { width: 40px; height: 40px; flex-shrink: 0; }
+  .sidebar-header .sidebar-logo img { width: 100%; height: 100%; object-fit: contain; }
   .sidebar-header .church-name { color: white; font-weight: 700; font-size: 14px; line-height: 1.3; }
   .sidebar-header .church-sub { color: var(--accent); font-size: 11px; margin-top: 2px; }
   .nav-section-label { color: rgba(255,255,255,0.3); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 14px 16px 6px; }
@@ -112,33 +116,233 @@
   .content { flex: 1; overflow-y: auto; padding: 24px; }
 
   /* ─── BUTTONS ─── */
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .18s; }
-  .btn-primary { background: var(--primary); color: white; }
-  .btn-primary:hover { background: var(--primary-dark); }
-  .btn-accent { background: var(--accent); color: white; }
-  .btn-accent:hover { background: var(--accent-light); color: var(--text); }
-  .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
-  .btn-outline:hover { background: var(--primary); color: white; }
-  .btn-danger { background: var(--danger); color: white; }
-  .btn-danger:hover { background: #c0392b; }
-  .btn-success { background: var(--success); color: white; }
-  .btn-sm { padding: 5px 12px; font-size: 12px; }
-  .btn-icon { padding: 6px 8px; background: transparent; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 14px; transition: all .15s; }
-  .btn-icon:hover { background: var(--bg); }
-  .btn-icon.danger:hover { background: #fde8e8; border-color: var(--danger); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .25s ease; }
+  .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #1a5cc8 100%); color: white; box-shadow: 0 4px 15px rgba(0,61,165,0.25); }
+  .btn-primary:hover { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,61,165,0.35); }
+  .btn-accent { background: linear-gradient(135deg, var(--accent) 0%, #f5c500 100%); color: var(--text); box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
+  .btn-accent:hover { background: linear-gradient(135deg, #f5c500 0%, var(--accent) 100%); transform: translateY(-2px); }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,61,165,0.25); }
+  .btn-danger { background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%); color: white; box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
+  .btn-danger:hover { background: linear-gradient(135deg, #c0392b 0%, var(--danger) 100%); transform: translateY(-2px); }
+  .btn-success { background: linear-gradient(135deg, var(--success) 0%, #229954 100%); color: white; box-shadow: 0 4px 15px rgba(39,174,96,0.3); }
+  .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39,174,96,0.4); }
+  .btn-sm { padding: 7px 14px; font-size: 12px; }
+  .btn-icon { padding: 8px 10px; background: white; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 14px; transition: all .2s; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+  .btn-icon:hover { background: var(--bg); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .btn-icon.danger:hover { background: #fde8e8; border-color: var(--danger); color: var(--danger); }
 
   /* ─── CARDS ─── */
-  .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; }
-  .stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .stat-card { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; }
-  .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-  .stat-icon.red { background: #fdeaea; }
-  .stat-icon.gold { background: #fdf6e3; }
-  .stat-icon.green { background: #e8f8f1; }
-  .stat-icon.blue { background: #e8f0fe; }
-  .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-  .stat-value { font-size: 24px; font-weight: 700; color: var(--text); }
-  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .card { background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.03); transition: all 0.25s; }
+  .card:hover { box-shadow: 0 8px 35px rgba(0,0,0,0.1); }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #f0f2f5; }
+  .card-header h3 { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text); }
+  .card-header .view-all { font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 600; padding: 6px 14px; background: rgba(0,61,165,0.06); border-radius: 20px; transition: all 0.2s; }
+  .card-header .view-all:hover { background: var(--primary); color: white; }
+
+  /* ─── DASHBOARD WELCOME ─── */
+  .dash-welcome { background: linear-gradient(135deg, #0a1628 0%, var(--primary) 50%, #1a5cc8 100%); border-radius: 20px; padding: 36px 40px; margin-bottom: 28px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 40px rgba(0,61,165,0.3); position: relative; overflow: hidden; }
+  .dash-welcome::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E"); }
+  .dash-welcome h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; }
+  .dash-welcome p { opacity: 0.9; font-size: 15px; position: relative; z-index: 1; }
+  .dash-welcome .welcome-date { background: rgba(255,255,255,0.15); padding: 14px 24px; border-radius: 14px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 1; }
+  .dash-welcome .welcome-date .day { font-size: 32px; font-weight: 800; }
+  .dash-welcome .welcome-date .month { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9; }
+
+  /* ─── IMPROVED STAT CARDS ─── */
+  .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 24px; }
+  .stat-card { background: white; border-radius: 14px; padding: 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); display: flex; flex-direction: column; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .stat-card.blue::before { background: linear-gradient(90deg, #003DA5, #1a5cc8); }
+  .stat-card.gold::before { background: linear-gradient(90deg, #FFD700, #ffe44d); }
+  .stat-card.green::before { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+  .stat-card.purple::before { background: linear-gradient(90deg, #8e44ad, #9b59b6); }
+  .stat-card .stat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .stat-icon.blue { background: linear-gradient(135deg, #e8f0fe, #d0e2ff); }
+  .stat-icon.gold { background: linear-gradient(135deg, #fff9e6, #ffecb3); }
+  .stat-icon.green { background: linear-gradient(135deg, #e8f8f1, #c8f7dc); }
+  .stat-icon.purple { background: linear-gradient(135deg, #f3e8ff, #e8d4f8); }
+  .stat-trend { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+  .stat-trend.up { background: #e8f8f1; color: #27ae60; }
+  .stat-trend.down { background: #fdeaea; color: #e74c3c; }
+  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
+  .stat-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ─── QUICK ACTIONS ─── */
+  .quick-actions { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .quick-action { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: white; border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); transition: all 0.2s; }
+  .quick-action:hover { border-color: var(--primary); background: #f8faff; color: var(--primary); }
+  .quick-action .qa-icon { font-size: 18px; }
+
+  /* ─── DASHBOARD GRID ─── */
+  .dash-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+  .dash-grid .card { height: fit-content; }
+
+  /* ─── ACTIVITY LIST ─── */
+  .activity-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0f2f5; cursor: pointer; transition: background 0.15s; }
+  .activity-item:hover { background: #f8fafc; margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: 8px; }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .activity-icon.sermon { background: #e8f0fe; }
+  .activity-icon.announce { background: #fff3cd; }
+  .activity-icon.member { background: #e8f8f1; }
+  .activity-content { flex: 1; min-width: 0; }
+  .activity-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .activity-meta { font-size: 12px; color: var(--text-muted); }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 14px; opacity: 0.5; }
+  .empty-state h4 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .empty-state p { font-size: 13px; }
+
+  /* ─── FINANCE CHART ─── */
+  .chart-container { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 24px; }
+  .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .chart-header h3 { font-size: 16px; font-weight: 700; }
+  .chart-legend { display: flex; gap: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-dot.income { background: #27ae60; }
+  .legend-dot.expense { background: #e74c3c; }
+  .bar-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 180px; padding: 0 10px; gap: 8px; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 6px; }
+  .bar-wrapper { display: flex; gap: 4px; align-items: flex-end; height: 150px; }
+  .bar { width: 20px; border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 4px; }
+  .bar.income { background: linear-gradient(180deg, #27ae60, #2ecc71); }
+  .bar.expense { background: linear-gradient(180deg, #e74c3c, #ec7063); }
+  .bar-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+  /* ─── MEMBER CARDS VIEW ─── */
+  .members-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
+  .members-header h2 { font-size: 20px; font-weight: 700; color: var(--text); }
+  .members-controls { display: flex; gap: 12px; align-items: center; }
+  .view-toggle { display: flex; background: #f0f2f5; border-radius: 8px; padding: 4px; }
+  .view-toggle button { padding: 8px 14px; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-size: 13px; color: var(--text-muted); transition: all 0.2s; }
+  .view-toggle button.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .member-stats { display: flex; gap: 24px; margin-bottom: 24px; }
+  .member-stat { display: flex; align-items: center; gap: 10px; padding: 16px 24px; background: white; border-radius: 12px; box-shadow: var(--shadow); }
+  .member-stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .member-stat-icon.total { background: linear-gradient(135deg, #e8f0fe, #d0e2ff); }
+  .member-stat-icon.active { background: linear-gradient(135deg, #e8f8f1, #c8f7dc); }
+  .member-stat-icon.new { background: linear-gradient(135deg, #fff9e6, #ffecb3); }
+  .member-stat-info .label { font-size: 12px; color: var(--text-muted); }
+  .member-stat-info .value { font-size: 22px; font-weight: 800; color: var(--text); }
+  
+  .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .member-card { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+  .member-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+  .member-card-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: 24px; display: flex; align-items: center; gap: 16px; }
+  .member-avatar { width: 70px; height: 70px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: var(--primary); border: 3px solid rgba(255,255,255,0.3); overflow: hidden; flex-shrink: 0; }
+  .member-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .member-card-name { color: white; }
+  .member-card-name h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .member-card-name p { font-size: 13px; opacity: 0.85; }
+  .member-card-body { padding: 20px; }
+  .member-card-info { display: flex; flex-direction: column; gap: 10px; }
+  .member-card-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); }
+  .member-card-row span:first-child { width: 20px; text-align: center; }
+  .member-card-footer { padding: 16px 20px; border-top: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: center; }
+  .member-card-status { display: flex; align-items: center; gap: 6px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .status-dot.active { background: #27ae60; }
+  .status-dot.inactive { background: #e74c3c; }
+
+  /* ─── MEMBER PROFILE MODAL - SIDEBAR LAYOUT ─── */
+  .profile-modal-overlay { background: rgba(10, 22, 40, 0.95); backdrop-filter: blur(8px); }
+  .profile-modal { width: 100vw !important; height: 100vh !important; max-width: 100vw !important; max-height: 100vh !important; margin: 0; border-radius: 0; padding: 0; overflow: hidden; display: flex; flex-direction: row !important; }
+  
+  /* Left Sidebar */
+  .profile-sidebar { width: 320px; min-width: 320px; background: linear-gradient(180deg, #0a1628 0%, #1a3a5c 50%, var(--primary) 100%); display: flex; flex-direction: column; align-items: center; padding: 40px 30px; position: relative; overflow-y: auto; }
+  .profile-sidebar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E"); pointer-events: none; }
+  .profile-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.7); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 10; }
+  .profile-close:hover { background: rgba(255,255,255,0.2); color: white; }
+  
+  /* Avatar Section */
+  .profile-avatar-section { position: relative; margin-top: 20px; margin-bottom: 24px; z-index: 2; }
+  .profile-avatar { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #fff 0%, #f0f2f5 100%); display: flex; align-items: center; justify-content: center; font-size: 52px; font-weight: 700; color: var(--primary); border: 4px solid rgba(255,255,255,0.3); overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); cursor: pointer; transition: all 0.3s; }
+  .profile-avatar:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-avatar-actions { position: absolute; bottom: 4px; right: 4px; }
+  .avatar-action-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); border: 2px solid white; color: var(--text); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+  .avatar-action-btn:hover { transform: scale(1.1); background: #f5c500; }
+  .avatar-dropdown { position: absolute; bottom: 40px; right: 0; background: white; border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); overflow: hidden; display: none; min-width: 160px; z-index: 100; }
+  .avatar-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
+  .avatar-dropdown-item { padding: 12px 16px; font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.15s; }
+  .avatar-dropdown-item:hover { background: #f0f2f5; }
+  .avatar-dropdown-item.danger { color: var(--danger); }
+  .avatar-dropdown-item.danger:hover { background: #fde8e8; }
+  
+  /* Profile Info in Sidebar */
+  .profile-sidebar-info { text-align: center; color: white; position: relative; z-index: 2; width: 100%; }
+  .profile-sidebar-info h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+  .profile-sidebar-info .role { font-size: 14px; opacity: 0.85; margin-bottom: 16px; }
+  .profile-badges { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 24px; }
+  .profile-badge { background: rgba(255,215,0,0.2); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; backdrop-filter: blur(10px); border: 1px solid rgba(255,215,0,0.3); }
+  .profile-badge.inactive { background: rgba(231,76,60,0.2); border-color: rgba(231,76,60,0.3); }
+  
+  /* Sidebar Action Buttons */
+  .profile-sidebar-actions { margin-top: auto; padding-top: 24px; width: 100%; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 2; }
+  .profile-sidebar-actions .btn { width: 100%; justify-content: center; padding: 10px 16px; font-size: 13px; }
+  .profile-sidebar-actions .btn-edit { background: var(--accent); color: var(--text); border: none; }
+  .profile-sidebar-actions .btn-edit:hover { background: #f5c500; }
+  .profile-sidebar-actions .btn-close { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+  .profile-sidebar-actions .btn-close:hover { background: rgba(255,255,255,0.2); }
+  
+  /* Right Main Content */
+  .profile-main { flex: 1; display: flex; flex-direction: column; background: #f8f9fb; overflow: hidden; }
+  .profile-tabs { display: flex; background: white; padding: 0 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-bottom: 1px solid #eef1f5; }
+  .profile-tab { padding: 18px 24px; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .profile-tab i { font-size: 14px; }
+  .profile-tab:hover { color: var(--primary); background: rgba(0,61,165,0.03); }
+  .profile-tab.active { color: var(--primary); border-bottom-color: var(--accent); }
+  .profile-body { flex: 1; overflow-y: auto; padding: 32px; }
+  .profile-tab-content { display: none; animation: fadeIn 0.25s ease; }
+  .profile-tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  
+  /* Image Lightbox */
+  .profile-lightbox { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 10000; display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  .profile-lightbox.show { display: flex; animation: fadeIn 0.2s ease; }
+  .profile-lightbox img { max-width: 90%; max-height: 90%; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .profile-lightbox-close { position: absolute; top: 24px; right: 24px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: none; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .profile-lightbox-close:hover { background: rgba(255,255,255,0.2); }
+
+  .profile-section { margin-bottom: 28px; background: white; border-radius: 14px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .profile-section:last-child { margin-bottom: 0; }
+  .profile-section-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding-bottom: 14px; border-bottom: 1px solid #eef1f5; }
+  .profile-section-title i { font-size: 16px; color: var(--accent); }
+  .profile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .profile-field { background: #f8f9fb; border-radius: 10px; padding: 16px; transition: all 0.2s; }
+  .profile-field:hover { background: #f0f2f5; }
+  .profile-field-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; font-weight: 600; }
+  .profile-field-value { font-size: 14px; font-weight: 600; color: var(--text); }
+  .profile-field.full { grid-column: span 2; }
+
+  .profile-departments { display: flex; flex-wrap: wrap; gap: 12px; }
+  .dept-tag { background: linear-gradient(135deg, #e8f0fe 0%, #d0e2ff 100%); padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 10px; transition: all 0.25s; border: 1px solid rgba(0,61,165,0.1); }
+  .dept-tag:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,61,165,0.15); }
+  .dept-tag .dept-icon { width: 32px; height: 32px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+  .tithe-list { display: flex; flex-direction: column; gap: 14px; }
+  .tithe-item { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #f8f9fb 0%, #fff 100%); border-radius: 14px; padding: 18px 22px; border: 1px solid #eef1f5; transition: all 0.25s; }
+  .tithe-item:hover { transform: translateX(5px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-color: var(--success); }
+  .tithe-item-left { display: flex; align-items: center; gap: 16px; }
+  .tithe-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #e8f8f1 0%, #b8f0d0 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 4px 12px rgba(39,174,96,0.15); }
+  .tithe-info .tithe-date { font-size: 14px; font-weight: 600; color: var(--text); }
+  .tithe-info .tithe-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .tithe-amount { font-size: 18px; font-weight: 700; color: var(--success); }
+  .tithe-total { background: linear-gradient(135deg, var(--primary) 0%, #1a5cc8 50%, #2980b9 100%); border-radius: 16px; padding: 28px; color: white; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; box-shadow: 0 8px 30px rgba(0,61,165,0.25); }
+  .tithe-total-label { font-size: 15px; opacity: 0.9; }
+  .tithe-total-value { font-size: 32px; font-weight: 800; }
+
+  .family-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .family-member { background: linear-gradient(135deg, #f8f9fb 0%, #fff 100%); border-radius: 14px; padding: 20px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all 0.25s; border: 1px solid #eef1f5; }
+  .family-member:hover { background: linear-gradient(135deg, #e8f0fe 0%, #d0e2ff 100%); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+  .family-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,61,165,0.2); }
+  .family-info .family-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .family-info .family-relation { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
 
   /* ─── TABLES ─── */
   .table-wrapper { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
@@ -181,10 +385,17 @@
 
   /* ─── GRID LAYOUTS ─── */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .loading { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
-  .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); }
-  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
+  .loading { text-align: center; padding: 30px; color: var(--text-muted); font-size: 13px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1200px) {
+    .stat-cards { grid-template-columns: repeat(2, 1fr); }
+    .dash-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .stat-cards { grid-template-columns: 1fr; }
+    .dash-welcome { flex-direction: column; text-align: center; gap: 16px; }
+  }
 
   /* ─── BIBLE ─── */
   .bible-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
@@ -271,30 +482,32 @@
   <!-- SIDEBAR -->
   <div id="sidebar">
     <div class="sidebar-header">
-      <div style="font-size:24px;margin-bottom:6px;">⛪</div>
-      <div class="church-name">House of Glory</div>
-      <div class="church-sub">Assemblies of God</div>
+      <div class="sidebar-logo"><img src="./images/logo.png" alt="Logo" /></div>
+      <div>
+        <div class="church-name">House of Glory</div>
+        <div class="church-sub">Assemblies of God</div>
+      </div>
     </div>
 
     <div class="nav-section-label">Main</div>
-    <div class="nav-item active" data-section="dashboard"><span class="nav-icon">📊</span> Dashboard</div>
-    <div class="nav-item" data-section="members"><span class="nav-icon">👥</span> Members</div>
-    <div class="nav-item" data-section="departments"><span class="nav-icon">🏢</span> Departments</div>
+    <div class="nav-item active" data-section="dashboard"><span class="nav-icon"></span> Dashboard</div>
+    <div class="nav-item" data-section="members"><span class="nav-icon"></span> Members</div>
+    <div class="nav-item" data-section="departments"><span class="nav-icon"></span> Departments</div>
 
     <div class="nav-section-label">Ministry</div>
-    <div class="nav-item" data-section="sermons"><span class="nav-icon">🎙️</span> Sermons</div>
-    <div class="nav-item" data-section="bible"><span class="nav-icon">📖</span> Bible</div>
-    <div class="nav-item" data-section="announcements"><span class="nav-icon">📢</span> Announcements</div>
-    <div class="nav-item" data-section="media"><span class="nav-icon">🎬</span> Media</div>
+    <div class="nav-item" data-section="sermons"><span class="nav-icon"></span> Sermons</div>
+    <div class="nav-item" data-section="bible"><span class="nav-icon"></span> Bible</div>
+    <div class="nav-item" data-section="announcements"><span class="nav-icon"></span> Announcements</div>
+    <div class="nav-item" data-section="media"><span class="nav-icon"></span> Media</div>
 
     <div class="nav-section-label">Administration</div>
-    <div class="nav-item" data-section="finance"><span class="nav-icon">💰</span> Finance</div>
-    <div class="nav-item" data-section="backup"><span class="nav-icon">💾</span> Backup</div>
-    <div class="nav-item" data-section="settings"><span class="nav-icon">⚙️</span> Settings</div>
+    <div class="nav-item" data-section="finance"><span class="nav-icon"></span> Finance</div>
+    <div class="nav-item" data-section="backup"><span class="nav-icon"></span> Backup</div>
+    <div class="nav-item" data-section="settings"><span class="nav-icon"><i class="fas fa-cog"></i></span> Settings</div>
 
     <div class="sidebar-footer">
       <div class="user-info">
-        <div class="user-avatar">👤</div>
+        <div class="user-avatar"><i class="fas fa-user"></i></div>
         <div>
           <div id="sidebar-user-name" style="font-size:12px;color:white;font-weight:600;">Admin</div>
           <div id="sidebar-user-email" class="user-email">—</div>
@@ -314,37 +527,157 @@
 
       <!-- ── DASHBOARD ── -->
       <div class="section active" id="section-dashboard">
-        <div class="stat-cards" id="dash-stats">
-          <div class="stat-card"><div class="stat-icon red">👥</div><div><div class="stat-label">Total Members</div><div class="stat-value" id="ds-members">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon red">✅</div><div><div class="stat-label">Active Members</div><div class="stat-value" id="ds-active">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon green">💵</div><div><div class="stat-label">Monthly Income</div><div class="stat-value" id="ds-income">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon gold">💰</div><div><div class="stat-label">Balance</div><div class="stat-value" id="ds-balance">—</div></div></div>
+        <!-- Welcome Banner -->
+        <div class="dash-welcome">
+          <div>
+            <h1 id="dash-greeting">Welcome back!</h1>
+            <p id="dash-subtitle">Here's what's happening at House of Glory today</p>
+          </div>
+          <div class="welcome-date">
+            <div class="day" id="dash-day">--</div>
+            <div class="month" id="dash-month">---</div>
+          </div>
         </div>
-        <div class="two-col">
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <div class="quick-action" onclick="showSection('members')"><span class="qa-icon"><i class="fas fa-user-plus"></i></span> Add Member</div>
+          <div class="quick-action" onclick="showSection('finance')"><span class="qa-icon"><i class="fas fa-hand-holding-dollar"></i></span> Record Offering</div>
+          <div class="quick-action" onclick="showSection('announcements')"><span class="qa-icon"><i class="fas fa-bullhorn"></i></span> New Announcement</div>
+          <div class="quick-action" onclick="showSection('sermons')"><span class="qa-icon"><i class="fas fa-microphone"></i></span> Add Sermon</div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stat-cards" id="dash-stats">
+          <div class="stat-card blue">
+            <div class="stat-header">
+              <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="stat-label">Total Members</div>
+            <div class="stat-value" id="ds-members">—</div>
+            <div class="stat-sub">Registered members</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-header">
+              <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+            </div>
+            <div class="stat-label">Active Members</div>
+            <div class="stat-value" id="ds-active">—</div>
+            <div class="stat-sub">Currently active</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-header">
+              <div class="stat-icon gold"><i class="fas fa-coins"></i></div>
+            </div>
+            <div class="stat-label">Monthly Income</div>
+            <div class="stat-value" id="ds-income">—</div>
+            <div class="stat-sub">This month's offerings</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-header">
+              <div class="stat-icon purple"><i class="fas fa-scale-balanced"></i></div>
+            </div>
+            <div class="stat-label">Balance</div>
+            <div class="stat-value" id="ds-balance">—</div>
+            <div class="stat-sub">Available funds</div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dash-grid">
+          <!-- Finance Chart -->
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3><i class="fas fa-chart-bar"></i> Finance Overview</h3>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-dot income"></span> Income</div>
+                <div class="legend-item"><span class="legend-dot expense"></span> Expenses</div>
+              </div>
+            </div>
+            <div class="bar-chart" id="finance-chart">
+              <div class="loading">Loading chart...</div>
+            </div>
+          </div>
           <div class="card">
-            <h3 style="margin-bottom:14px;">🎙️ Recent Sermons</h3>
+            <div class="card-header">
+              <h3><i class="fas fa-bullhorn"></i> Announcements</h3>
+              <span class="view-all" onclick="showSection('announcements')">View All →</span>
+            </div>
+            <div id="dash-announcements"><div class="loading">Loading…</div></div>
+          </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="dash-grid" style="margin-top: 20px;">
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fas fa-microphone"></i> Recent Sermons</h3>
+              <span class="view-all" onclick="showSection('sermons')">View All →</span>
+            </div>
             <div id="dash-sermons"><div class="loading">Loading…</div></div>
           </div>
           <div class="card">
-            <h3 style="margin-bottom:14px;">📢 Announcements</h3>
-            <div id="dash-announcements"><div class="loading">Loading…</div></div>
+            <div class="card-header">
+              <h3><i class="fas fa-users"></i> Recent Members</h3>
+              <span class="view-all" onclick="showSection('members')">View All →</span>
+            </div>
+            <div id="dash-members-list"><div class="loading">Loading…</div></div>
           </div>
         </div>
       </div>
 
       <!-- ── MEMBERS ── -->
       <div class="section" id="section-members">
-        <div class="table-wrapper">
-          <div class="table-header">
-            <h3>All Members</h3>
-            <div style="display:flex;gap:10px;align-items:center;">
-              <input type="text" class="search-box" placeholder="🔍 Search members…" oninput="filterTable('members-tbody', this.value, [0,1,2])" />
+        <!-- Stats Bar -->
+        <div class="member-stats">
+          <div class="member-stat">
+            <div class="member-stat-icon total"><i class="fas fa-users"></i></div>
+            <div class="member-stat-info">
+              <div class="label">Total Members</div>
+              <div class="value" id="member-total-count">0</div>
             </div>
           </div>
-          <table>
-            <thead><tr><th>Name</th><th>Phone</th><th>Gender</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody id="members-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
-          </table>
+          <div class="member-stat">
+            <div class="member-stat-icon active">✓</div>
+            <div class="member-stat-info">
+              <div class="label">Active Members</div>
+              <div class="value" id="member-active-count">0</div>
+            </div>
+          </div>
+          <div class="member-stat">
+            <div class="member-stat-icon new">🆕</div>
+            <div class="member-stat-info">
+              <div class="label">New This Month</div>
+              <div class="value" id="member-new-count">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Header with Controls -->
+        <div class="members-header">
+          <h2>Church Members</h2>
+          <div class="members-controls">
+            <input type="text" class="search-box" id="member-search" placeholder="Search members…" oninput="filterMembers(this.value)" />
+            <div class="view-toggle">
+              <button class="active" onclick="setMemberView('grid')" id="btn-grid-view"><i class="fas fa-th-large"></i> Grid</button>
+              <button onclick="setMemberView('table')" id="btn-table-view"><i class="fas fa-list"></i> Table</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Grid View -->
+        <div id="members-grid-view" class="members-grid">
+          <div class="loading">Loading members…</div>
+        </div>
+
+        <!-- Table View (hidden by default) -->
+        <div id="members-table-view" style="display:none;">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Member</th><th>Phone</th><th>Category</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+              <tbody id="members-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -353,7 +686,7 @@
         <div class="table-wrapper">
           <div class="table-header">
             <h3>Departments</h3>
-            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('dept-tbody', this.value, [0,1,2])" />
+            <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('dept-tbody', this.value, [0,1,2])" />
           </div>
           <table>
             <thead><tr><th>Name</th><th>Leader</th><th>Meeting Day</th><th>Meeting Time</th><th>Description</th><th>Actions</th></tr></thead>
@@ -365,10 +698,10 @@
       <!-- ── FINANCE ── -->
       <div class="section" id="section-finance">
         <div class="stat-cards" style="grid-template-columns:repeat(4,1fr);">
-          <div class="stat-card"><div class="stat-icon green">📈</div><div><div class="stat-label">Total Income</div><div class="stat-value" id="fin-income">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon red">📉</div><div><div class="stat-label">Total Expenses</div><div class="stat-value" id="fin-expenses">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon gold">🙏</div><div><div class="stat-label">Total Tithes</div><div class="stat-value" id="fin-tithes">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon blue">⚖️</div><div><div class="stat-label">Balance</div><div class="stat-value" id="fin-balance">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon green"></div><div><div class="stat-label">Total Income</div><div class="stat-value" id="fin-income">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon red"></div><div><div class="stat-label">Total Expenses</div><div class="stat-value" id="fin-expenses">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon gold"></div><div><div class="stat-label">Total Tithes</div><div class="stat-value" id="fin-tithes">—</div></div></div>
+          <div class="stat-card"><div class="stat-icon blue"></div><div><div class="stat-label">Balance</div><div class="stat-value" id="fin-balance">—</div></div></div>
         </div>
         <div class="tabs">
           <div class="tab active" onclick="switchTab('finance','transactions')">Transactions</div>
@@ -378,7 +711,7 @@
           <div class="table-wrapper">
             <div class="table-header">
               <h3>Transactions</h3>
-              <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('fin-tbody', this.value, [0,1,2])" />
+              <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('fin-tbody', this.value, [0,1,2])" />
             </div>
             <table>
               <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount (GHS)</th><th>Actions</th></tr></thead>
@@ -390,7 +723,7 @@
           <div class="table-wrapper">
             <div class="table-header">
               <h3>Tithes</h3>
-              <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('tithes-tbody', this.value, [0,1,2])" />
+              <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('tithes-tbody', this.value, [0,1,2])" />
             </div>
             <table>
               <thead><tr><th>Date</th><th>Member</th><th>Amount (GHS)</th><th>Notes</th><th>Actions</th></tr></thead>
@@ -405,7 +738,7 @@
         <div class="table-wrapper">
           <div class="table-header">
             <h3>Sermons</h3>
-            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('sermons-tbody', this.value, [0,1,2])" />
+            <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('sermons-tbody', this.value, [0,1,2])" />
           </div>
           <table>
             <thead><tr><th>Date</th><th>Title</th><th>Preacher</th><th>Scripture</th><th>Notes</th><th>Actions</th></tr></thead>
@@ -420,14 +753,14 @@
           <div class="bible-controls">
             <select id="bible-book" onchange="loadChapters()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;"></select>
             <select id="bible-chapter" onchange="loadBibleChapter()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;"></select>
-            <button class="btn btn-primary btn-sm" onclick="loadBibleChapter()">📖 Read</button>
+            <button class="btn btn-primary btn-sm" onclick="loadBibleChapter()"><i class="fas fa-book-open"></i> Read</button>
             <input type="text" id="bible-search-input" placeholder="Search scriptures…" style="flex:1;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;" />
             <button class="btn btn-outline btn-sm" onclick="searchBible()">Search</button>
           </div>
           <div class="bible-text" id="bible-text"><div class="loading">Select a book and chapter to start reading.</div></div>
         </div>
         <div class="card" style="margin-top:0;">
-          <h3 style="margin-bottom:14px;">🔖 Bookmarks</h3>
+          <h3 style="margin-bottom:14px;"><i class="fas fa-bookmark"></i> Bookmarks</h3>
           <div id="bible-bookmarks"><div class="loading">Loading…</div></div>
         </div>
       </div>
@@ -437,7 +770,7 @@
         <div class="table-wrapper">
           <div class="table-header">
             <h3>Announcements</h3>
-            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('ann-tbody', this.value, [0,1,2])" />
+            <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('ann-tbody', this.value, [0,1,2])" />
           </div>
           <table>
             <thead><tr><th>Title</th><th>Message</th><th>Priority</th><th>Target</th><th>Date</th><th>Actions</th></tr></thead>
@@ -451,7 +784,7 @@
         <div class="table-wrapper">
           <div class="table-header">
             <h3>Media Files</h3>
-            <input type="text" class="search-box" placeholder="🔍 Search…" oninput="filterTable('media-tbody', this.value, [0,1,2])" />
+            <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('media-tbody', this.value, [0,1,2])" />
           </div>
           <table>
             <thead><tr><th>Title</th><th>Type</th><th>Category</th><th>Description</th><th>Date</th><th>Actions</th></tr></thead>
@@ -464,13 +797,13 @@
       <div class="section" id="section-backup">
         <div class="backup-cards">
           <div class="backup-card">
-            <div class="b-icon">☁️</div>
+            <div class="b-icon"><i class="fas fa-cloud-arrow-up"></i></div>
             <h3>Create Backup</h3>
             <p>Export all church data to a backup file. This includes members, finance records, sermons, and more.</p>
             <button class="btn btn-primary" onclick="doBackupCreate()">Create Backup</button>
           </div>
           <div class="backup-card">
-            <div class="b-icon">📥</div>
+            <div class="b-icon"><i class="fas fa-cloud-arrow-down"></i></div>
             <h3>Restore Backup</h3>
             <p>Restore church data from a previously created backup file.</p>
             <button class="btn btn-outline" onclick="doBackupRestore()">Restore Backup</button>
@@ -481,7 +814,7 @@
       <!-- ── SETTINGS ── -->
       <div class="section" id="section-settings">
         <div class="card" style="max-width:480px;">
-          <h3 style="margin-bottom:20px;">🔐 Change Password</h3>
+          <h3 style="margin-bottom:20px;"><i class="fas fa-lock"></i> Change Password</h3>
           <div class="form-group">
             <label>Current Password</label>
             <input type="password" id="cp-current" placeholder="Enter current password" />
@@ -510,6 +843,20 @@
   <div class="modal modal-lg" onclick="event.stopPropagation()">
     <h3 id="member-modal-title">Add Member</h3>
     <input type="hidden" id="member-id" />
+    
+    <!-- Profile Picture Section -->
+    <div class="form-group" style="text-align: center; padding: 16px 0;">
+      <div id="member-pic-preview" style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 12px; overflow: hidden;">
+        <span id="member-pic-initials"><i class="fas fa-user"></i></span>
+        <img id="member-pic-img" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+      </div>
+      <label style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f0f2f5; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text-muted);">
+        <i class="fas fa-camera"></i> Upload Photo
+        <input type="file" id="m-profilePic" accept="image/*" style="display: none;" onchange="previewMemberPhoto(this)" />
+      </label>
+      <button type="button" id="remove-pic-btn" onclick="removeMemberPhoto()" style="display: none; margin-left: 8px; padding: 8px 16px; background: #ffebee; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--danger);"><i class="fas fa-trash-alt"></i> Remove</button>
+    </div>
+
     <div class="form-row">
       <div class="form-group"><label>First Name *</label><input id="m-firstName" type="text" placeholder="First name" /></div>
       <div class="form-group"><label>Last Name *</label><input id="m-lastName" type="text" placeholder="Last name" /></div>
@@ -546,6 +893,162 @@
       <button class="btn btn-outline" onclick="closeModal('member-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveMember()">Save Member</button>
     </div>
+  </div>
+</div>
+
+<!-- Profile Image Lightbox -->
+<div class="profile-lightbox" id="profile-lightbox" onclick="closeProfileLightbox()">
+  <button class="profile-lightbox-close" onclick="closeProfileLightbox()"><i class="fas fa-times"></i></button>
+  <img id="profile-lightbox-img" src="" alt="Profile" />
+</div>
+
+<!-- Member Profile Modal -->
+<div class="modal-overlay" id="profile-modal" style="display:none;" onclick="closeModalOnBg(event,'profile-modal')">
+  <div class="modal profile-modal" onclick="event.stopPropagation()">
+    <!-- Left Sidebar -->
+    <div class="profile-sidebar">
+      <button class="profile-close" onclick="closeModal('profile-modal')"><i class="fas fa-times"></i></button>
+      
+      <div class="profile-avatar-section">
+        <div class="profile-avatar" id="profile-avatar" onclick="openProfileLightbox()">
+          <span id="profile-avatar-initials">JD</span>
+          <img id="profile-avatar-img" style="display: none;" />
+        </div>
+        <div class="profile-avatar-actions">
+          <button class="avatar-action-btn" onclick="toggleAvatarDropdown(event)"><i class="fas fa-plus"></i></button>
+          <div class="avatar-dropdown" id="avatar-dropdown">
+            <label class="avatar-dropdown-item">
+              <i class="fas fa-camera"></i> Upload Photo
+              <input type="file" accept="image/*" style="display: none;" onchange="uploadProfilePicture(this)" />
+            </label>
+            <div class="avatar-dropdown-item danger" onclick="deleteProfilePicture()"><i class="fas fa-trash-alt"></i> Remove Photo</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-sidebar-info">
+        <h2 id="profile-name">John Doe</h2>
+        <p class="role" id="profile-role">Choir Member</p>
+        <div class="profile-badges">
+          <span class="profile-badge" id="profile-category">Adult</span>
+          <span class="profile-badge" id="profile-status-badge">Active</span>
+        </div>
+      </div>
+      
+      <div class="profile-sidebar-actions">
+        <button class="btn btn-edit" onclick="editMemberFromProfile()"><i class="fas fa-edit"></i> Edit Member</button>
+        <button class="btn btn-close" onclick="closeModal('profile-modal')"><i class="fas fa-arrow-left"></i> Close Profile</button>
+      </div>
+    </div>
+    
+    <!-- Right Main Content -->
+    <div class="profile-main">
+      <div class="profile-tabs">
+        <div class="profile-tab active" onclick="switchProfileTab('details')"><i class="fas fa-clipboard-list"></i> Details</div>
+        <div class="profile-tab" onclick="switchProfileTab('tithes')"><i class="fas fa-hand-holding-dollar"></i> Tithes</div>
+        <div class="profile-tab" onclick="switchProfileTab('family')"><i class="fas fa-people-roof"></i> Family</div>
+      </div>
+      
+      <div class="profile-body">
+      
+      <!-- Details Tab -->
+      <div class="profile-tab-content active" id="profile-tab-details">
+        <div class="profile-section">
+          <div class="profile-section-title"><i class="fas fa-phone"></i> Contact Information</div>
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="profile-field-label">Email</div>
+              <div class="profile-field-value" id="profile-email">Not provided</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-field-label">Phone Number</div>
+              <div class="profile-field-value" id="profile-phone">Not provided</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-field-label">WhatsApp</div>
+              <div class="profile-field-value" id="profile-whatsapp">Not provided</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-field-label">Address</div>
+              <div class="profile-field-value" id="profile-address">Not provided</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <div class="profile-section-title"><i class="fas fa-user"></i> Personal Information</div>
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="profile-field-label">Date of Birth</div>
+              <div class="profile-field-value" id="profile-dob">Not provided</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-field-label">Gender</div>
+              <div class="profile-field-value" id="profile-gender">Not provided</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-field-label">Occupation</div>
+              <div class="profile-field-value" id="profile-occupation">Not provided</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-field-label">Member Since</div>
+              <div class="profile-field-value" id="profile-joined">Not provided</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <div class="profile-section-title"><i class="fas fa-church"></i> Departments</div>
+          <div class="profile-departments" id="profile-departments">
+            <div style="color: var(--text-muted); font-size: 13px;">No departments assigned</div>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <div class="profile-section-title"><i class="fas fa-sticky-note"></i> Notes</div>
+          <div class="profile-field full">
+            <div class="profile-field-value" id="profile-notes" style="white-space: pre-wrap;">No additional notes</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tithes Tab -->
+      <div class="profile-tab-content" id="profile-tab-tithes">
+        <div class="profile-section">
+          <div class="profile-section-title"><i class="fas fa-hand-holding-dollar"></i> Tithe History</div>
+          <div class="tithe-list" id="profile-tithes-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+              <div style="font-size: 48px; margin-bottom: 12px;"><i class="fas fa-hand-holding-dollar"></i></div>
+              <div>No tithe records found</div>
+            </div>
+          </div>
+          <div class="tithe-total" id="profile-tithe-total" style="display: none;">
+            <div>
+              <div class="tithe-total-label">Total Tithes Paid</div>
+              <div class="tithe-total-value" id="profile-total-tithe">GHS 0.00</div>
+            </div>
+            <div style="font-size: 48px;"><i class="fas fa-gem"></i></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Family Tab -->
+      <div class="profile-tab-content" id="profile-tab-family">
+        <div class="profile-section">
+          <div class="profile-section-title"><i class="fas fa-people-roof"></i> Family Members</div>
+          <div class="family-list" id="profile-family-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 40px; grid-column: span 2;">
+              <div style="font-size: 48px; margin-bottom: 12px;"><i class="fas fa-people-roof"></i></div>
+              <div>No family members linked</div>
+              <p style="font-size: 12px; margin-top: 8px;">Family members with the same household can be linked here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    
+    <input type="hidden" id="profile-member-id" />
   </div>
 </div>
 
@@ -680,7 +1183,7 @@
 <!-- Confirm Modal -->
 <div class="modal-overlay" id="confirm-modal" style="display:none;">
   <div class="modal" style="width:360px;text-align:center;" onclick="event.stopPropagation()">
-    <div style="font-size:40px;margin-bottom:14px;">⚠️</div>
+    <div style="font-size:40px;margin-bottom:14px;"><i class="fas fa-triangle-exclamation" style="color:var(--warning);"></i></div>
     <h3 id="confirm-title" style="margin-bottom:8px;">Confirm Delete</h3>
     <p id="confirm-msg" style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Are you sure you want to delete this item? This cannot be undone.</p>
     <div class="modal-footer" style="justify-content:center;">
@@ -690,6 +1193,9 @@
   </div>
 </div>
 
+<!-- Modal Container -->
+<div id="modal-root"></div>
+
 <!-- Toast Container -->
 <div id="toast"></div>
 
@@ -698,6 +1204,12 @@
 // UTILITIES
 // ═══════════════════════════════════════════════════════════════════
 const api = window.electronAPI;
+
+// Close modal helper
+function closeModal() {
+  const modalRoot = document.getElementById('modal-root');
+  if (modalRoot) modalRoot.innerHTML = '';
+}
 
 function toast(msg, type = 'info') {
   const el = document.createElement('div');
@@ -809,9 +1321,9 @@ async function doLogout() {
 // NAVIGATION
 // ═══════════════════════════════════════════════════════════════════
 const sectionTitles = {
-  dashboard: '📊 Dashboard', members: '👥 Members', departments: '🏢 Departments',
-  finance: '💰 Finance', sermons: '🎙️ Sermons', bible: '📖 Bible',
-  announcements: '📢 Announcements', media: '🎬 Media', backup: '💾 Backup', settings: '⚙️ Settings'
+  dashboard: '<i class="fas fa-chart-line"></i> Dashboard', members: '<i class="fas fa-users"></i> Members', departments: '<i class="fas fa-building"></i> Departments',
+  finance: '<i class="fas fa-wallet"></i> Finance', sermons: '<i class="fas fa-microphone"></i> Sermons', bible: '<i class="fas fa-book-bible"></i> Bible',
+  announcements: '<i class="fas fa-bullhorn"></i> Announcements', media: '<i class="fas fa-film"></i> Media', backup: '<i class="fas fa-database"></i> Backup', settings: '<i class="fas fa-cog"></i> Settings'
 };
 
 function navigateTo(name) {
@@ -821,7 +1333,7 @@ function navigateTo(name) {
   if (sec) sec.classList.add('active');
   const nav = document.querySelector(`.nav-item[data-section="${name}"]`);
   if (nav) nav.classList.add('active');
-  document.getElementById('section-title').textContent = sectionTitles[name] || name;
+  document.getElementById('section-title').innerHTML = sectionTitles[name] || name;
   setTopbarActions('');
   const loaders = { dashboard: loadDashboard, members: loadMembers, departments: loadDepts, finance: loadFinance, sermons: loadSermons, bible: loadBible, announcements: loadAnn, media: loadMedia };
   if (loaders[name]) loaders[name]();
@@ -837,12 +1349,35 @@ function navigateTo(name) {
   if (addBtns[name]) setTopbarActions(addBtns[name]);
 }
 
+// Alias for showSection
+function showSection(name) { navigateTo(name); }
+
 document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => navigateTo(n.dataset.section)));
 
 // ═══════════════════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════════════
 async function loadDashboard() {
+  // Update date display
+  const now = new Date();
+  const dayEl = document.getElementById('dash-day');
+  const monthEl = document.getElementById('dash-month');
+  if (dayEl) dayEl.textContent = now.getDate();
+  if (monthEl) monthEl.textContent = now.toLocaleString('default', { month: 'short', year: 'numeric' });
+
+  // Personalized greeting based on time of day
+  const hour = now.getHours();
+  let greeting = 'Good evening';
+  let icon = '<i class="fas fa-moon"></i>';
+  if (hour >= 5 && hour < 12) { greeting = 'Good morning'; icon = '<i class="fas fa-sun"></i>'; }
+  else if (hour >= 12 && hour < 17) { greeting = 'Good afternoon'; icon = '<i class="fas fa-cloud-sun"></i>'; }
+  
+  const userName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
+  const greetingEl = document.getElementById('dash-greeting');
+  const subtitleEl = document.getElementById('dash-subtitle');
+  if (greetingEl) greetingEl.innerHTML = `${greeting}, ${userName}! ${icon}`;
+  if (subtitleEl) subtitleEl.textContent = `Here's what's happening at House of Glory today`;
+
   try {
     const stats = await api.dashboard.getStats();
     if (stats) {
@@ -850,47 +1385,259 @@ async function loadDashboard() {
       document.getElementById('ds-active').textContent = stats.activeMembers ?? '—';
       document.getElementById('ds-income').textContent = fmt(stats.monthlyIncome || 0);
       document.getElementById('ds-balance').textContent = fmt(stats.balance || 0);
+
+      // Render finance chart
+      renderFinanceChart(stats.monthlyData || []);
+
+      // Render recent sermons
       const sEl = document.getElementById('dash-sermons');
       if (stats.recentSermons && stats.recentSermons.length) {
-        sEl.innerHTML = stats.recentSermons.map(s => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><strong>${s.title || 'Untitled'}</strong><br><span style="color:var(--text-muted)">${s.preacher || ''} · ${fmtDate(s.date)}</span></div>`).join('');
-      } else { sEl.innerHTML = '<div class="empty-state"><p>No sermons yet.</p></div>'; }
+        sEl.innerHTML = stats.recentSermons.slice(0, 4).map(s => `
+          <div class="activity-item" onclick="showSection('sermons')">
+            <div class="activity-icon sermon"><i class="fas fa-microphone"></i></div>
+            <div class="activity-content">
+              <div class="activity-title">${s.title || 'Untitled'}</div>
+              <div class="activity-meta">${s.preacher || 'Unknown'} · ${fmtDate(s.date)}</div>
+            </div>
+          </div>
+        `).join('');
+      } else { sEl.innerHTML = '<div class="empty-state"><div class="emoji"><i class="fas fa-microphone"></i></div><h4>No Sermons Yet</h4><p>Add your first sermon to see it here</p></div>'; }
+
+      // Render announcements (clickable to view full content)
+      // Store announcements for modal access
+      window._dashAnnouncements = stats.upcomingAnnouncements;
       const aEl = document.getElementById('dash-announcements');
       if (stats.upcomingAnnouncements && stats.upcomingAnnouncements.length) {
-        aEl.innerHTML = stats.upcomingAnnouncements.map(a => `<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><strong>${a.title || 'Untitled'}</strong><br><span style="color:var(--text-muted)">${(a.message||'').substring(0,60)}…</span></div>`).join('');
-      } else { aEl.innerHTML = '<div class="empty-state"><p>No announcements yet.</p></div>'; }
+        aEl.innerHTML = stats.upcomingAnnouncements.slice(0, 4).map((a, idx) => `
+          <div class="activity-item" onclick="showAnnouncementDetail(${idx})">
+            <div class="activity-icon announce"><i class="fas fa-bullhorn"></i></div>
+            <div class="activity-content">
+              <div class="activity-title">${escapeHtml(a.title) || 'Untitled'}</div>
+              <div class="activity-meta">${escapeHtml((a.message||'').substring(0,50))}${(a.message||'').length > 50 ? '…' : ''}</div>
+            </div>
+          </div>
+        `).join('');
+      } else { aEl.innerHTML = '<div class="empty-state"><div class="emoji"><i class="fas fa-bullhorn"></i></div><h4>No Announcements</h4><p>Create an announcement to share with members</p></div>'; }
+
+      // Render recent members
+      const mEl = document.getElementById('dash-members-list');
+      if (stats.recentMembers && stats.recentMembers.length) {
+        mEl.innerHTML = stats.recentMembers.slice(0, 4).map(m => `
+          <div class="activity-item" onclick="showSection('members')">
+            <div class="activity-icon member"><i class="fas fa-user"></i></div>
+            <div class="activity-content">
+              <div class="activity-title">${m.fullName || 'Unknown'}</div>
+              <div class="activity-meta">${m.category || 'Member'} · ${m.status || 'Active'}</div>
+            </div>
+          </div>
+        `).join('');
+      } else { mEl.innerHTML = '<div class="empty-state"><div class="emoji"><i class="fas fa-users"></i></div><h4>No Members Yet</h4><p>Add your first member to get started</p></div>'; }
     }
   } catch (e) { console.error(e); toast('Failed to load dashboard', 'error'); }
+}
+
+// Render finance bar chart
+function renderFinanceChart(monthlyData) {
+  const chartEl = document.getElementById('finance-chart');
+  if (!chartEl) return;
+
+  // Default data for last 6 months if no data provided
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const now = new Date();
+  const recentMonths = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    recentMonths.push(d.toLocaleString('default', { month: 'short' }));
+  }
+
+  // If no data, show sample/empty chart
+  if (!monthlyData || !monthlyData.length) {
+    monthlyData = recentMonths.map((m, i) => ({ month: m, income: 0, expense: 0 }));
+  }
+
+  // Find max value for scaling
+  const maxVal = Math.max(...monthlyData.map(d => Math.max(d.income || 0, d.expense || 0)), 100);
+
+  chartEl.innerHTML = monthlyData.slice(-6).map(d => {
+    const incomeHeight = Math.max(((d.income || 0) / maxVal) * 140, 4);
+    const expenseHeight = Math.max(((d.expense || 0) / maxVal) * 140, 4);
+    return `
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar income" style="height: ${incomeHeight}px" title="Income: GHS ${(d.income || 0).toLocaleString()}"></div>
+          <div class="bar expense" style="height: ${expenseHeight}px" title="Expense: GHS ${(d.expense || 0).toLocaleString()}"></div>
+        </div>
+        <div class="bar-label">${d.month || ''}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Show announcement detail modal
+function showAnnouncementDetail(index) {
+  const announcements = window._dashAnnouncements || [];
+  const a = announcements[index];
+  if (!a) return;
+  
+  const title = escapeHtml(a.title || 'Untitled');
+  const message = escapeHtml(a.message || 'No content available.');
+  const priority = a.priority || 'normal';
+  
+  const priorityColors = { high: 'var(--danger)', medium: 'var(--warning)', low: 'var(--success)', normal: 'var(--primary)' };
+  const priorityBg = { high: '#fdeaea', medium: '#fef9e7', low: '#e8f8f1', normal: '#e8f0fe' };
+  
+  document.getElementById('modal-root').innerHTML = `
+    <div class="modal-overlay" onclick="closeModal()">
+      <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+          <div style="width: 50px; height: 50px; border-radius: 12px; background: ${priorityBg[priority] || priorityBg.normal}; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class="fas fa-bullhorn"></i></div>
+          <div style="flex: 1;">
+            <h3 style="margin: 0; font-size: 18px;">${title}</h3>
+            <span class="badge" style="background: ${priorityBg[priority] || priorityBg.normal}; color: ${priorityColors[priority] || priorityColors.normal}; margin-top: 6px;">${priority.charAt(0).toUpperCase() + priority.slice(1)} Priority</span>
+          </div>
+        </div>
+        <div style="background: #f8f9fb; border-radius: 10px; padding: 20px; font-size: 14px; line-height: 1.7; color: var(--text); white-space: pre-wrap;">${message}</div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal()">Close</button>
+          <button class="btn btn-primary" onclick="closeModal(); showSection('announcements');">View All Announcements</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Helper to escape HTML in strings for safe injection
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 // ═══════════════════════════════════════════════════════════════════
 // MEMBERS
 // ═══════════════════════════════════════════════════════════════════
 let membersCache = [];
+let currentMemberView = 'grid';
+
+function setMemberView(view) {
+  currentMemberView = view;
+  document.getElementById('btn-grid-view').classList.toggle('active', view === 'grid');
+  document.getElementById('btn-table-view').classList.toggle('active', view === 'table');
+  document.getElementById('members-grid-view').style.display = view === 'grid' ? 'grid' : 'none';
+  document.getElementById('members-table-view').style.display = view === 'table' ? 'block' : 'none';
+}
 
 async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
+  const grid = document.getElementById('members-grid-view');
   tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  grid.innerHTML = '<div class="loading">Loading members…</div>';
   try {
     membersCache = await api.members.getAll() || [];
     renderMembers(membersCache);
-  } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load members.</td></tr>'; }
+  } catch (e) { 
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load members.</td></tr>'; 
+    grid.innerHTML = '<div class="empty-state"><div class="emoji"><i class="fas fa-triangle-exclamation"></i></div><p>Failed to load members.</p></div>';
+  }
 }
 
 function renderMembers(list) {
   const tbody = document.getElementById('members-tbody');
-  if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">👥</div><p>No members found. Add your first member!</p></div></td></tr>'; return; }
+  const grid = document.getElementById('members-grid-view');
+
+  updateMemberStats(membersCache);
+  
+  if (!list.length) { 
+    const emptyState = '<div class="empty-state"><div class="emoji"><i class="fas fa-users"></i></div><p>No members found. Add your first member!</p></div>';
+    tbody.innerHTML = '<tr><td colspan="6">' + emptyState + '</td></tr>'; 
+    grid.innerHTML = emptyState;
+    return; 
+  }
+  
+  // Render Grid View
+  grid.innerHTML = list.map(m => `
+    <div class="member-card" onclick="viewMemberProfile(${JSON.stringify(m).replace(/"/g, '&quot;')})">
+      <div class="member-card-header">
+        <div class="member-avatar">
+          ${m.profilePicture 
+            ? `<img src="${m.profilePicture}" alt="${m.fullName || 'Member'}">`
+            : getInitials(m.fullName || ((m.firstName || '') + ' ' + (m.lastName || '')).trim() || 'M')}
+        </div>
+        <div class="member-card-name">
+          <h3>${m.fullName || ((m.firstName || '') + ' ' + (m.lastName || '')).trim() || 'Unknown'}</h3>
+          <p>${m.category || 'Member'}</p>
+        </div>
+      </div>
+      <div class="member-card-body">
+        <div class="member-card-info">
+          <div class="member-card-row"><span><i class="fas fa-envelope"></i></span> ${m.email || '—'}</div>
+          <div class="member-card-row"><span><i class="fas fa-phone"></i></span> ${m.phoneNumber || '—'}</div>
+          <div class="member-card-row"><span><i class="fas fa-user"></i></span> ${m.gender || '—'}</div>
+        </div>
+      </div>
+      <div class="member-card-footer">
+        <div class="member-card-status">
+          <span class="status-dot ${m.status === 'active' ? 'active' : 'inactive'}"></span>
+          <span>${m.status || 'active'}</span>
+        </div>
+        <div class="actions-col">
+          <button class="btn-icon" title="Edit" onclick="event.stopPropagation(); openMemberModal(${JSON.stringify(m).replace(/"/g, '&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" title="Delete" onclick="event.stopPropagation(); deleteMember('${m.id}','${(m.fullName||'').replace(/'/g,"\\'")}')"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+  
+  // Render Table View
   tbody.innerHTML = list.map(m => `
     <tr>
-      <td><strong>${m.fullName || '—'}</strong><br><span style="color:var(--text-muted);font-size:11px;">${m.email || ''}</span></td>
+      <td><strong style="cursor:pointer;color:var(--primary);" onclick="viewMemberProfile(${JSON.stringify(m).replace(/"/g, '&quot;')})">${m.fullName || '—'}</strong><br><span style="color:var(--text-muted);font-size:11px;">${m.email || ''}</span></td>
       <td>${m.phoneNumber || '—'}</td>
       <td>${m.gender || '—'}</td>
       <td><span class="badge badge-info">${m.category || '—'}</span></td>
       <td><span class="badge ${m.status === 'active' ? 'badge-success' : 'badge-muted'}">${m.status || '—'}</span></td>
       <td><div class="actions-col">
-        <button class="btn-icon" onclick="openMemberModal(${JSON.stringify(m).replace(/"/g, '&quot;')})">✏️</button>
-        <button class="btn-icon danger" onclick="deleteMember('${m.id}','${(m.fullName||'').replace(/'/g,"\\'")}')">🗑️</button>
+        <button class="btn-icon" title="View Profile" onclick="viewMemberProfile(${JSON.stringify(m).replace(/"/g, '&quot;')})"><i class="fas fa-eye"></i></button>
+        <button class="btn-icon" title="Edit" onclick="openMemberModal(${JSON.stringify(m).replace(/"/g, '&quot;')})"><i class="fas fa-edit"></i></button>
+        <button class="btn-icon danger" title="Delete" onclick="deleteMember('${m.id}','${(m.fullName||'').replace(/'/g,"\\'")}')"><i class="fas fa-trash-alt"></i></button>
       </div></td>
     </tr>`).join('');
+}
+
+function updateMemberStats(list) {
+  const allMembers = Array.isArray(list) ? list : [];
+  const totalEl = document.getElementById('member-total-count');
+  const activeEl = document.getElementById('member-active-count');
+  const newEl = document.getElementById('member-new-count');
+
+  const total = allMembers.length;
+  const active = allMembers.filter(m => (m?.status || '').toLowerCase() === 'active').length;
+
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+  const newThisMonth = allMembers.filter(m => {
+    const sourceDate = m?.joinDate || m?.createdAt || m?.dateAdded;
+    if (!sourceDate) return false;
+    const parsed = new Date(sourceDate);
+    if (Number.isNaN(parsed.getTime())) return false;
+    return parsed.getMonth() === thisMonth && parsed.getFullYear() === thisYear;
+  }).length;
+
+  if (totalEl) totalEl.textContent = String(total);
+  if (activeEl) activeEl.textContent = String(active);
+  if (newEl) newEl.textContent = String(newThisMonth);
+}
+
+function filterMembers(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) { renderMembers(membersCache); return; }
+  const filtered = membersCache.filter(m => {
+    const fullName = (m.fullName || ((m.firstName || '') + ' ' + (m.lastName || ''))).toLowerCase();
+    return fullName.includes(q) || 
+           (m.email || '').toLowerCase().includes(q) || 
+           (m.phoneNumber || '').toLowerCase().includes(q) ||
+           (m.category || '').toLowerCase().includes(q);
+  });
+  renderMembers(filtered);
 }
 
 function openMemberModal(member) {
@@ -899,16 +1646,45 @@ function openMemberModal(member) {
   document.getElementById('member-id').value = isEdit ? member.id : '';
   const fields = { 'm-firstName': isEdit ? member.firstName : '', 'm-lastName': isEdit ? member.lastName : '', 'm-email': isEdit ? member.email : '', 'm-phone': isEdit ? member.phoneNumber : '', 'm-whatsapp': isEdit ? member.whatsappNumber : '', 'm-dob': isEdit ? member.dateOfBirth : '', 'm-gender': isEdit ? member.gender : '', 'm-category': isEdit ? member.category : '', 'm-occupation': isEdit ? member.occupation : '', 'm-role': isEdit ? member.rolePosition : '', 'm-joinDate': isEdit ? member.joinDate : '', 'm-status': isEdit ? (member.status || 'active') : 'active', 'm-address': isEdit ? member.address : '', 'm-notes': isEdit ? member.notes : '' };
   Object.entries(fields).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.value = val || ''; });
+  
+  // Handle photo preview
+  memberPhotoData = null;
+  const img = document.getElementById('member-pic-img');
+  const initials = document.getElementById('member-pic-initials');
+  const removeBtn = document.getElementById('remove-pic-btn');
+  document.getElementById('m-profilePic').value = '';
+  
+  if (isEdit && member.profilePicture) {
+    memberPhotoData = member.profilePicture;
+    img.src = member.profilePicture;
+    img.style.display = 'block';
+    initials.style.display = 'none';
+    removeBtn.style.display = 'inline-block';
+  } else {
+    img.src = '';
+    img.style.display = 'none';
+    const name = isEdit ? `${member.firstName || ''} ${member.lastName || ''}`.trim() : '';
+    initials.innerHTML = name ? getInitials(name) : '<i class="fas fa-user"></i>';
+    initials.style.display = 'flex';
+    removeBtn.style.display = 'none';
+  }
+  
   document.getElementById('member-modal').style.display = 'flex';
 }
 
 async function saveMember() {
   const id = document.getElementById('member-id').value;
   const data = { firstName: document.getElementById('m-firstName').value.trim(), lastName: document.getElementById('m-lastName').value.trim(), email: document.getElementById('m-email').value.trim(), phoneNumber: document.getElementById('m-phone').value.trim(), whatsappNumber: document.getElementById('m-whatsapp').value.trim(), dateOfBirth: document.getElementById('m-dob').value, gender: document.getElementById('m-gender').value, category: document.getElementById('m-category').value, occupation: document.getElementById('m-occupation').value.trim(), rolePosition: document.getElementById('m-role').value.trim(), joinDate: document.getElementById('m-joinDate').value, status: document.getElementById('m-status').value, address: document.getElementById('m-address').value.trim(), notes: document.getElementById('m-notes').value.trim() };
+  
+  // Include profile picture if set
+  if (memberPhotoData !== null) {
+    data.profilePicture = memberPhotoData;
+  }
+  
   if (!data.firstName || !data.lastName) { toast('First and last name are required.', 'error'); return; }
   try {
     let res = id ? await api.members.update(id, data) : await api.members.create(data);
-    if (res && res.success !== false) { toast(id ? 'Member updated!' : 'Member added!', 'success'); closeModal('member-modal'); loadMembers(); }
+    if (res && res.success !== false) { toast(id ? 'Member updated!' : 'Member added!', 'success'); closeModal('member-modal'); memberPhotoData = null; loadMembers(); }
     else toast(res?.message || 'Failed to save member.', 'error');
   } catch (e) { toast('Error saving member.', 'error'); }
 }
@@ -920,6 +1696,264 @@ async function deleteMember(id, name) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// MEMBER PHOTO FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════
+let memberPhotoData = null;
+let currentProfileMember = null;
+
+// Compress image to reduce size for Firestore storage
+function compressImage(file, maxWidth = 400, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Scale down if too large
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to compressed base64
+        const compressedData = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedData);
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// Preview photo when adding/editing member in modal
+async function previewMemberPhoto(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      toast('Image must be less than 5MB', 'error');
+      return;
+    }
+    try {
+      // Compress the image
+      memberPhotoData = await compressImage(file);
+      const img = document.getElementById('member-pic-img');
+      const initials = document.getElementById('member-pic-initials');
+      img.src = memberPhotoData;
+      img.style.display = 'block';
+      initials.style.display = 'none';
+      document.getElementById('remove-pic-btn').style.display = 'inline-block';
+    } catch (err) {
+      toast('Error processing image', 'error');
+    }
+  }
+}
+
+// Remove photo preview in member modal
+function removeMemberPhoto() {
+  memberPhotoData = null;
+  const img = document.getElementById('member-pic-img');
+  const initials = document.getElementById('member-pic-initials');
+  img.src = '';
+  img.style.display = 'none';
+  initials.style.display = 'flex';
+  document.getElementById('remove-pic-btn').style.display = 'none';
+  document.getElementById('m-profilePic').value = '';
+}
+
+// Upload profile picture from profile modal
+async function uploadProfilePicture(input) {
+  if (!currentProfileMember) {
+    toast('No member selected', 'error');
+    return;
+  }
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      toast('Image must be less than 5MB', 'error');
+      return;
+    }
+    try {
+      // Compress the image
+      const photoData = await compressImage(file);
+      const res = await api.members.update(currentProfileMember.id, { profilePicture: photoData });
+      if (res?.success !== false) {
+        toast('Profile picture updated!', 'success');
+        // Update the profile modal avatar
+        const avatarImg = document.getElementById('profile-avatar-img');
+        const avatarInitials = document.getElementById('profile-avatar-initials');
+        avatarImg.src = photoData;
+        avatarImg.style.display = 'block';
+        avatarInitials.style.display = 'none';
+        currentProfileMember.profilePicture = photoData;
+        loadMembers(); // Refresh the members list
+      } else {
+        toast(res?.message || 'Failed to update photo', 'error');
+      }
+    } catch (err) {
+      toast('Error uploading photo', 'error');
+    }
+  }
+}
+
+// Delete profile picture from profile modal
+async function deleteProfilePicture() {
+  if (!currentProfileMember) {
+    toast('No member selected', 'error');
+    return;
+  }
+  confirm('Remove Photo', 'Are you sure you want to remove this profile picture?', async () => {
+    try {
+      const res = await api.members.update(currentProfileMember.id, { profilePicture: null });
+      if (res?.success !== false) {
+        toast('Profile picture removed!', 'success');
+        // Update the profile modal avatar
+        const avatarImg = document.getElementById('profile-avatar-img');
+        const avatarInitials = document.getElementById('profile-avatar-initials');
+        avatarImg.src = '';
+        avatarImg.style.display = 'none';
+        const name = currentProfileMember.fullName || `${currentProfileMember.firstName} ${currentProfileMember.lastName}`;
+        avatarInitials.textContent = getInitials(name);
+        avatarInitials.style.display = 'flex';
+        currentProfileMember.profilePicture = null;
+        loadMembers(); // Refresh the members list
+      } else {
+        toast(res?.message || 'Failed to remove photo', 'error');
+      }
+    } catch (err) {
+      toast('Error removing photo', 'error');
+    }
+  });
+}
+
+// Get initials from name
+function getInitials(name) {
+  if (!name) return '<i class="fas fa-user"></i>';
+  const parts = name.trim().split(' ').filter(p => p);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  return parts[0] ? parts[0][0].toUpperCase() : '<i class="fas fa-user"></i>';
+}
+
+// Switch profile tabs
+function switchProfileTab(tab) {
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.profile-tab[onclick*="${tab}"]`).classList.add('active');
+  document.getElementById(`profile-tab-${tab}`).classList.add('active');
+}
+
+// View member profile modal
+function viewMemberProfile(member) {
+  currentProfileMember = member;
+  const name = member.fullName || `${member.firstName || ''} ${member.lastName || ''}`.trim();
+  
+  // Set profile header info
+  document.getElementById('profile-name').textContent = name || 'Unknown';
+  document.getElementById('profile-role').textContent = member.rolePosition || member.occupation || 'Member';
+  document.getElementById('profile-category').textContent = member.category || 'N/A';
+  const statusBadge = document.getElementById('profile-status-badge');
+  statusBadge.textContent = member.status || 'active';
+  statusBadge.className = 'profile-badge ' + (member.status === 'active' ? '' : 'inactive');
+  
+  // Set avatar
+  const avatarImg = document.getElementById('profile-avatar-img');
+  const avatarInitials = document.getElementById('profile-avatar-initials');
+  if (member.profilePicture) {
+    avatarImg.src = member.profilePicture;
+    avatarImg.style.display = 'block';
+    avatarInitials.style.display = 'none';
+  } else {
+    avatarImg.src = '';
+    avatarImg.style.display = 'none';
+    avatarInitials.textContent = getInitials(name);
+    avatarInitials.style.display = 'flex';
+  }
+  
+  // Set contact info using correct IDs
+  const setField = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value || 'Not provided';
+  };
+  setField('profile-email', member.email);
+  setField('profile-phone', member.phoneNumber);
+  setField('profile-whatsapp', member.whatsappNumber);
+  setField('profile-address', member.address);
+  setField('profile-dob', member.dateOfBirth);
+  setField('profile-gender', member.gender);
+  setField('profile-occupation', member.occupation);
+  setField('profile-joined', member.joinDate);
+  setField('profile-notes', member.notes || 'No additional notes');
+  
+  // Reset to details tab
+  switchProfileTab('details');
+  
+  // Show modal
+  document.getElementById('profile-modal').style.display = 'flex';
+}
+
+// Edit member from profile modal
+function editMemberFromProfile() {
+  if (!currentProfileMember) {
+    toast('No member selected', 'error');
+    return;
+  }
+  closeModal('profile-modal');
+  setTimeout(() => {
+    openMemberModal(currentProfileMember);
+  }, 200);
+}
+
+// Toggle avatar action dropdown
+function toggleAvatarDropdown(event) {
+  event.stopPropagation();
+  const dropdown = document.getElementById('avatar-dropdown');
+  dropdown.classList.toggle('show');
+  
+  // Close dropdown when clicking outside
+  const closeDropdown = (e) => {
+    if (!e.target.closest('.profile-avatar-actions')) {
+      dropdown.classList.remove('show');
+      document.removeEventListener('click', closeDropdown);
+    }
+  };
+  setTimeout(() => document.addEventListener('click', closeDropdown), 10);
+}
+
+// Open profile picture lightbox
+function openProfileLightbox() {
+  const avatarImg = document.getElementById('profile-avatar-img');
+  if (avatarImg && avatarImg.style.display !== 'none' && avatarImg.src) {
+    const lightbox = document.getElementById('profile-lightbox');
+    const lightboxImg = document.getElementById('profile-lightbox-img');
+    lightboxImg.src = avatarImg.src;
+    lightbox.classList.add('show');
+  }
+}
+
+// Close profile picture lightbox
+function closeProfileLightbox() {
+  document.getElementById('profile-lightbox').classList.remove('show');
+}
+
+// Close lightbox on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeProfileLightbox();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════
 // DEPARTMENTS
 // ═══════════════════════════════════════════════════════════════════
 async function loadDepts() {
@@ -927,7 +1961,7 @@ async function loadDepts() {
   tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
   try {
     const list = await api.departments.getAll() || [];
-    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">🏢</div><p>No departments yet.</p></div></td></tr>'; return; }
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji"><i class="fas fa-building"></i></div><p>No departments yet.</p></div></td></tr>'; return; }
     tbody.innerHTML = list.map(d => `
       <tr>
         <td><strong>${d.name || '—'}</strong></td>
@@ -936,8 +1970,8 @@ async function loadDepts() {
         <td>${d.meetingTime || '—'}</td>
         <td>${(d.description || '').substring(0,50)}</td>
         <td><div class="actions-col">
-          <button class="btn-icon" onclick="openDeptModal(${JSON.stringify(d).replace(/"/g,'&quot;')})">✏️</button>
-          <button class="btn-icon danger" onclick="deleteDept('${d.id}','${(d.name||'').replace(/'/g,"\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="openDeptModal(${JSON.stringify(d).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" onclick="deleteDept('${d.id}','${(d.name||'').replace(/'/g,"\\'")}')"  ><i class="fas fa-trash-alt"></i></button>
         </div></td>
       </tr>`).join('');
   } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
@@ -995,8 +2029,8 @@ async function loadFinance() {
         <td>${t.description || '—'}</td>
         <td><strong>${fmt(t.amount)}</strong></td>
         <td><div class="actions-col">
-          <button class="btn-icon" onclick="openFinModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">✏️</button>
-          <button class="btn-icon danger" onclick="deleteFin('${t.id}')">🗑️</button>
+          <button class="btn-icon" onclick="openFinModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" onclick="deleteFin('${t.id}')"><i class="fas fa-trash-alt"></i></button>
         </div></td>
       </tr>`).join('');
   } catch { toast('Failed to load finance.', 'error'); }
@@ -1015,8 +2049,8 @@ async function loadTithes() {
         <td><strong>${fmt(t.amount)}</strong></td>
         <td>${t.notes || '—'}</td>
         <td><div class="actions-col">
-          <button class="btn-icon" onclick="openTitheModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">✏️</button>
-          <button class="btn-icon danger" onclick="deleteTithe('${t.id}')">🗑️</button>
+          <button class="btn-icon" onclick="openTitheModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" onclick="deleteTithe('${t.id}')"><i class="fas fa-trash-alt"></i></button>
         </div></td>
       </tr>`).join('');
   } catch { tbody.innerHTML = '<tr><td colspan="5" class="loading">Failed to load.</td></tr>'; }
@@ -1088,7 +2122,7 @@ async function loadSermons() {
   tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
   try {
     const list = await api.sermons.getAll() || [];
-    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">🎙️</div><p>No sermons yet.</p></div></td></tr>'; return; }
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji"><i class="fas fa-microphone"></i></div><p>No sermons yet.</p></div></td></tr>'; return; }
     tbody.innerHTML = list.map(s => `
       <tr>
         <td>${fmtDate(s.date)}</td>
@@ -1097,8 +2131,8 @@ async function loadSermons() {
         <td>${s.scripture || '—'}</td>
         <td>${(s.notes||'').substring(0,50)}${s.notes&&s.notes.length>50?'…':''}</td>
         <td><div class="actions-col">
-          <button class="btn-icon" onclick="openSermonModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️</button>
-          <button class="btn-icon danger" onclick="deleteSermon('${s.id}','${(s.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="openSermonModal(${JSON.stringify(s).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" onclick="deleteSermon('${s.id}','${(s.title||'').replace(/'/g,"\\'")}')"  ><i class="fas fa-trash-alt"></i></button>
         </div></td>
       </tr>`).join('');
   } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
@@ -1191,7 +2225,7 @@ async function loadBookmarks() {
     const bms = await api.bible.getBookmarks() || [];
     const el = document.getElementById('bible-bookmarks');
     if (!bms.length) { el.innerHTML = '<div class="empty-state"><p>No bookmarks yet.</p></div>'; return; }
-    el.innerHTML = bms.map(b => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><span>${b.reference || b.book}</span><button class="btn-icon danger" onclick="removeBookmark('${b.id}')">🗑️</button></div>`).join('');
+    el.innerHTML = bms.map(b => `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;"><span>${b.reference || b.book}</span><button class="btn-icon danger" onclick="removeBookmark('${b.id}')"><i class="fas fa-trash-alt"></i></button></div>`).join('');
   } catch {}
 }
 
@@ -1207,7 +2241,7 @@ async function loadAnn() {
   tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
   try {
     const list = await api.announcements.getAll() || [];
-    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">📢</div><p>No announcements yet.</p></div></td></tr>'; return; }
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji"><i class="fas fa-bullhorn"></i></div><p>No announcements yet.</p></div></td></tr>'; return; }
     tbody.innerHTML = list.map(a => `
       <tr>
         <td><strong>${a.title || '—'}</strong></td>
@@ -1216,8 +2250,8 @@ async function loadAnn() {
         <td>${a.targetAudience || a.target || 'All'}</td>
         <td>${fmtDate(a.createdAt)}</td>
         <td><div class="actions-col">
-          <button class="btn-icon" onclick="openAnnModal(${JSON.stringify(a).replace(/"/g,'&quot;')})">✏️</button>
-          <button class="btn-icon danger" onclick="deleteAnn('${a.id}','${(a.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="openAnnModal(${JSON.stringify(a).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" onclick="deleteAnn('${a.id}','${(a.title||'').replace(/'/g,"\\'")}')"  ><i class="fas fa-trash-alt"></i></button>
         </div></td>
       </tr>`).join('');
   } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
@@ -1259,17 +2293,17 @@ async function loadMedia() {
   tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
   try {
     const list = await api.media.getAll() || [];
-    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">🎬</div><p>No media files yet.</p></div></td></tr>'; return; }
-    const typeIcons = { video:'🎬', audio:'🎵', image:'🖼️', document:'📄' };
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji"><i class="fas fa-film"></i></div><p>No media files yet.</p></div></td></tr>'; return; }
+    const typeIcons = { video:'<i class="fas fa-video"></i>', audio:'<i class="fas fa-music"></i>', image:'<i class="fas fa-image"></i>', document:'<i class="fas fa-file-alt"></i>' };
     tbody.innerHTML = list.map(m => `
       <tr>
         <td><strong>${m.title || '—'}</strong></td>
-        <td>${typeIcons[m.type]||'📎'} ${m.type||'—'}</td>
+        <td>${typeIcons[m.type]||'<i class="fas fa-paperclip"></i>'} ${m.type||'—'}</td>
         <td>${m.category||'—'}</td>
         <td>${(m.description||'').substring(0,50)}</td>
         <td>${fmtDate(m.createdAt||m.uploadedAt)}</td>
         <td><div class="actions-col">
-          <button class="btn-icon danger" onclick="deleteMedia('${m.id}','${(m.title||'').replace(/'/g,"\\'")}')">🗑️</button>
+          <button class="btn-icon danger" onclick="deleteMedia('${m.id}','${(m.title||'').replace(/'/g,"\\'")}')"  ><i class="fas fa-trash-alt"></i></button>
         </div></td>
       </tr>`).join('');
   } catch { tbody.innerHTML = '<tr><td colspan="6" class="loading">Failed to load.</td></tr>'; }
