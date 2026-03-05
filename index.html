@@ -333,9 +333,48 @@
   .tithe-info .tithe-date { font-size: 14px; font-weight: 600; color: var(--text); }
   .tithe-info .tithe-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
   .tithe-amount { font-size: 18px; font-weight: 700; color: var(--success); }
+  .tithe-item-actions { display: flex; gap: 8px; margin-left: 12px; }
+  .tithe-item-actions .btn-icon { padding: 6px 8px; font-size: 12px; }
   .tithe-total { background: linear-gradient(135deg, var(--primary) 0%, #1a5cc8 50%, #2980b9 100%); border-radius: 16px; padding: 28px; color: white; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; box-shadow: 0 8px 30px rgba(0,61,165,0.25); }
   .tithe-total-label { font-size: 15px; opacity: 0.9; }
   .tithe-total-value { font-size: 32px; font-weight: 800; }
+  .tithe-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .tithe-section-header .btn { padding: 8px 16px; font-size: 13px; }
+
+  /* Receipt Print Styles */
+  .receipt-container { display: none; }
+  @media print {
+    body * { visibility: hidden; }
+    .receipt-container, .receipt-container * { visibility: visible; }
+    .receipt-container { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; }
+  }
+  .receipt-preview { background: white; width: 600px; max-width: 100%; margin: 0 auto; padding: 40px; font-family: 'Inter', Arial, sans-serif; }
+  .receipt-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #003DA5; }
+  .receipt-logo { width: 80px; height: 80px; object-fit: contain; }
+  .receipt-header-info { flex: 1; text-align: center; }
+  .receipt-header-info h1 { color: #003DA5; font-size: 24px; font-weight: 800; margin: 0 0 4px 0; }
+  .receipt-header-info h2 { color: #FFD700; font-size: 14px; font-weight: 700; margin: 0 0 8px 0; text-transform: uppercase; }
+  .receipt-header-info p { font-size: 11px; color: #666; margin: 2px 0; }
+  .receipt-title { background: #003DA5; color: #FFD700; text-align: center; padding: 12px 30px; font-size: 16px; font-weight: 700; text-transform: uppercase; margin: 20px auto; display: inline-block; border-radius: 4px; }
+  .receipt-title-wrap { text-align: center; }
+  .receipt-body { margin-top: 30px; }
+  .receipt-row { display: flex; margin-bottom: 20px; align-items: baseline; }
+  .receipt-label { font-weight: 600; font-size: 13px; color: #333; min-width: 180px; }
+  .receipt-value { flex: 1; border-bottom: 1px solid #333; padding-bottom: 4px; font-size: 14px; min-height: 20px; }
+  .receipt-payment-methods { display: flex; gap: 30px; margin: 20px 0; }
+  .receipt-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .receipt-checkbox-box { width: 16px; height: 16px; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .receipt-footer { display: flex; flex-direction: column; align-items: center; margin-top: 60px; padding-top: 20px; }
+  .receipt-signatures-row { display: flex; justify-content: space-between; width: 100%; margin-bottom: 30px; }
+  .receipt-stamp-pastor { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .receipt-stamp { width: 100px; height: 100px; }
+  .receipt-stamp img { width: 100%; height: 100%; object-fit: contain; }
+  .receipt-signature { text-align: center; }
+  .receipt-signature-line { width: 180px; border-bottom: 1px solid #333; padding-bottom: 4px; margin-bottom: 6px; min-height: 30px; text-align: center; }
+  .receipt-signature-label { font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; }
+  .signature-text { font-family: 'Brush Script MT', 'Segoe Script', cursive; font-size: 20px; font-style: italic; color: #003DA5; }
+  .pastor-sig { margin-top: 10px; }
+  .pastor-name { font-size: 24px; color: #003DA5; }
 
   .family-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
   .family-member { background: linear-gradient(135deg, #f8f9fb 0%, #fff 100%); border-radius: 14px; padding: 20px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all 0.25s; border: 1px solid #eef1f5; }
@@ -1015,11 +1054,15 @@
       <!-- Tithes Tab -->
       <div class="profile-tab-content" id="profile-tab-tithes">
         <div class="profile-section">
-          <div class="profile-section-title"><i class="fas fa-hand-holding-dollar"></i> Tithe History</div>
+          <div class="tithe-section-header">
+            <div class="profile-section-title" style="margin-bottom: 0; padding-bottom: 0; border-bottom: none;"><i class="fas fa-hand-holding-dollar"></i> Tithe History</div>
+            <button class="btn btn-success" onclick="openMemberTitheModal()"><i class="fas fa-plus"></i> Add Tithe</button>
+          </div>
           <div class="tithe-list" id="profile-tithes-list">
             <div style="text-align: center; color: var(--text-muted); padding: 40px;">
               <div style="font-size: 48px; margin-bottom: 12px;"><i class="fas fa-hand-holding-dollar"></i></div>
               <div>No tithe records found</div>
+              <p style="font-size: 12px; margin-top: 8px;">Click "Add Tithe" to record a tithe payment</p>
             </div>
           </div>
           <div class="tithe-total" id="profile-tithe-total" style="display: none;">
@@ -1051,6 +1094,70 @@
     <input type="hidden" id="profile-member-id" />
   </div>
 </div>
+
+<!-- Member Tithe Modal -->
+<div class="modal-overlay" id="member-tithe-modal" style="display:none;" onclick="closeModalOnBg(event,'member-tithe-modal')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width: 480px;">
+    <h3><i class="fas fa-hand-holding-dollar"></i> Add Tithe Payment</h3>
+    <input type="hidden" id="tithe-id" />
+    <div class="form-group">
+      <label>Amount (GHS) *</label>
+      <input id="tithe-amount" type="number" step="0.01" min="0" placeholder="Enter amount" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date *</label>
+        <input id="tithe-date" type="date" />
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input id="tithe-time" type="time" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Payment Method</label>
+      <select id="tithe-method">
+        <option value="cash">Cash</option>
+        <option value="mobile_money">Mobile Money</option>
+        <option value="bank_transfer">Bank Transfer</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <textarea id="tithe-notes" placeholder="Additional notes..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('member-tithe-modal')">Cancel</button>
+      <button class="btn btn-success" onclick="saveMemberTithe()"><i class="fas fa-save"></i> Save Tithe</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tithe Receipt Modal -->
+<div class="modal-overlay" id="receipt-modal" style="display:none;" onclick="closeModalOnBg(event,'receipt-modal')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width: 720px; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <h3 style="margin: 0;"><i class="fas fa-receipt"></i> Tithe Receipt</h3>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-outline" onclick="downloadReceiptPDF()"><i class="fas fa-download"></i> Download PDF</button>
+        <button class="btn btn-primary" onclick="printReceipt()"><i class="fas fa-print"></i> Print</button>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 16px;">
+      <label style="font-size: 13px;">Received By (Enter name before printing)</label>
+      <input type="text" id="receipt-received-by" placeholder="Enter receiver's name" style="max-width: 300px;" onchange="updateReceiptReceivedBy()" />
+    </div>
+    <div id="receipt-content" class="receipt-preview" style="border: 1px solid #e5e8ec; border-radius: 8px;">
+      <!-- Receipt will be generated here -->
+    </div>
+    <div class="modal-footer" style="margin-top: 20px;">
+      <button class="btn btn-outline" onclick="closeModal('receipt-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden Receipt Container for Printing -->
+<div id="receipt-print-container" class="receipt-container"></div>
 
 <!-- Department Modal -->
 <div class="modal-overlay" id="dept-modal" style="display:none;" onclick="closeModalOnBg(event,'dept-modal')">
@@ -1895,6 +2002,9 @@ function viewMemberProfile(member) {
   setField('profile-joined', member.joinDate);
   setField('profile-notes', member.notes || 'No additional notes');
   
+  // Load member tithes
+  loadMemberTithes(member.id);
+  
   // Reset to details tab
   switchProfileTab('details');
   
@@ -1952,6 +2062,378 @@ document.addEventListener('keydown', (e) => {
     closeProfileLightbox();
   }
 });
+
+// ═══════════════════════════════════════════════════════════════════
+// MEMBER TITHE FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════
+
+// Open tithe modal for current member
+function openMemberTitheModal(tithe = null) {
+  if (!currentProfileMember) {
+    toast('No member selected', 'error');
+    return;
+  }
+  
+  // Set default date to today
+  const today = new Date().toISOString().split('T')[0];
+  const now = new Date().toTimeString().slice(0, 5);
+  
+  document.getElementById('tithe-id').value = tithe?.id || '';
+  document.getElementById('tithe-amount').value = tithe?.amount || '';
+  document.getElementById('tithe-date').value = tithe?.date?.split('T')[0] || today;
+  document.getElementById('tithe-time').value = tithe?.time || now;
+  document.getElementById('tithe-method').value = tithe?.paymentMethod || 'cash';
+  document.getElementById('tithe-notes').value = tithe?.notes || '';
+  
+  document.getElementById('member-tithe-modal').style.display = 'flex';
+}
+
+// Save tithe for member
+async function saveMemberTithe() {
+  const amount = parseFloat(document.getElementById('tithe-amount').value);
+  const date = document.getElementById('tithe-date').value;
+  const time = document.getElementById('tithe-time').value || '00:00';
+  const paymentMethod = document.getElementById('tithe-method').value;
+  const notes = document.getElementById('tithe-notes').value.trim();
+  const titheId = document.getElementById('tithe-id').value;
+  
+  if (!amount || amount <= 0) {
+    toast('Please enter a valid amount', 'error');
+    return;
+  }
+  if (!date) {
+    toast('Please select a date', 'error');
+    return;
+  }
+  
+  const memberName = currentProfileMember.fullName || 
+    `${currentProfileMember.firstName || ''} ${currentProfileMember.lastName || ''}`.trim();
+  
+  const titheData = {
+    memberId: currentProfileMember.id,
+    memberName: memberName,
+    amount: amount,
+    date: date,
+    time: time,
+    paymentMethod: paymentMethod,
+    notes: notes,
+    receiptNo: titheId ? undefined : generateReceiptNumber()
+  };
+  
+  try {
+    let res;
+    if (titheId) {
+      res = await api.finance.updateTithe(titheId, titheData);
+      toast('Tithe updated successfully!', 'success');
+    } else {
+      res = await api.finance.addTithe(titheData);
+      toast('Tithe added successfully!', 'success');
+    }
+    
+    closeModal('member-tithe-modal');
+    loadMemberTithes(currentProfileMember.id);
+  } catch (error) {
+    console.error('Error saving tithe:', error);
+    toast('Failed to save tithe', 'error');
+  }
+}
+
+// Generate receipt number
+function generateReceiptNumber() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  return `HOG-${year}-${random}`;
+}
+
+// Load member tithes
+async function loadMemberTithes(memberId) {
+  const container = document.getElementById('profile-tithes-list');
+  const totalContainer = document.getElementById('profile-tithe-total');
+  const totalValue = document.getElementById('profile-total-tithe');
+  
+  container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+  
+  try {
+    const allTithes = await api.finance.getTithes() || [];
+    const memberTithes = allTithes.filter(t => t.memberId === memberId);
+    
+    if (!memberTithes.length) {
+      container.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+          <div style="font-size: 48px; margin-bottom: 12px;"><i class="fas fa-hand-holding-dollar"></i></div>
+          <div>No tithe records found</div>
+          <p style="font-size: 12px; margin-top: 8px;">Click "Add Tithe" to record a tithe payment</p>
+        </div>`;
+      totalContainer.style.display = 'none';
+      return;
+    }
+    
+    // Sort by date descending
+    memberTithes.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Calculate total
+    const total = memberTithes.reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+    
+    container.innerHTML = memberTithes.map(t => {
+      const dateStr = t.date ? new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+      const methodLabel = { cash: 'Cash', mobile_money: 'Mobile Money', bank_transfer: 'Bank Transfer' }[t.paymentMethod] || 'Cash';
+      return `
+        <div class="tithe-item">
+          <div class="tithe-item-left">
+            <div class="tithe-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+            <div class="tithe-info">
+              <div class="tithe-date">${dateStr}${t.time ? ' at ' + t.time : ''}</div>
+              <div class="tithe-note">${methodLabel}${t.notes ? ' • ' + t.notes : ''}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="tithe-amount">GHS ${parseFloat(t.amount).toFixed(2)}</div>
+            <div class="tithe-item-actions">
+              <button class="btn-icon" title="Print Receipt" onclick="generateTitheReceipt('${t.id}')"><i class="fas fa-receipt"></i></button>
+              <button class="btn-icon" title="Edit" onclick="openMemberTitheModal(${JSON.stringify(t).replace(/"/g, '&quot;')})"><i class="fas fa-edit"></i></button>
+              <button class="btn-icon danger" title="Delete" onclick="deleteMemberTithe('${t.id}')"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    
+    totalValue.textContent = `GHS ${total.toFixed(2)}`;
+    totalContainer.style.display = 'flex';
+    
+  } catch (error) {
+    console.error('Error loading tithes:', error);
+    container.innerHTML = '<div style="text-align: center; color: var(--danger); padding: 40px;">Failed to load tithes</div>';
+  }
+}
+
+// Delete member tithe
+async function deleteMemberTithe(titheId) {
+  confirm('Delete Tithe', 'Are you sure you want to delete this tithe record?', async () => {
+    try {
+      await api.finance.deleteTithe(titheId);
+      toast('Tithe deleted', 'success');
+      loadMemberTithes(currentProfileMember.id);
+    } catch (error) {
+      toast('Failed to delete tithe', 'error');
+    }
+  });
+}
+
+// Generate and show tithe receipt
+let currentReceiptData = null;
+
+async function generateTitheReceipt(titheId) {
+  try {
+    const allTithes = await api.finance.getTithes() || [];
+    const tithe = allTithes.find(t => t.id === titheId);
+    
+    if (!tithe) {
+      toast('Tithe record not found', 'error');
+      return;
+    }
+    
+    const memberName = tithe.memberName || 'N/A';
+    const amount = parseFloat(tithe.amount).toFixed(2);
+    const dateStr = tithe.date ? new Date(tithe.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A';
+    const receiptNo = tithe.receiptNo || `HOG-${new Date().getFullYear()}-${titheId.slice(-4).toUpperCase()}`;
+    const paymentMethod = tithe.paymentMethod || 'cash';
+    
+    // Store receipt data for later use
+    currentReceiptData = { memberName, amount, dateStr, receiptNo, paymentMethod };
+    
+    // Clear the received by input
+    document.getElementById('receipt-received-by').value = '';
+    
+    // Generate receipt HTML
+    updateReceiptHTML('');
+    
+    document.getElementById('receipt-modal').style.display = 'flex';
+    
+  } catch (error) {
+    console.error('Error generating receipt:', error);
+    toast('Failed to generate receipt', 'error');
+  }
+}
+
+// Update receipt with receiver name
+function updateReceiptReceivedBy() {
+  const receivedBy = document.getElementById('receipt-received-by').value.trim();
+  updateReceiptHTML(receivedBy);
+}
+
+// Generate receipt HTML
+function updateReceiptHTML(receivedBy) {
+  if (!currentReceiptData) return;
+  
+  const { memberName, amount, dateStr, receiptNo, paymentMethod } = currentReceiptData;
+  
+  const receiptHTML = `
+    <div class="receipt-header">
+      <img src="./images/logo.png" alt="Assemblies of God Logo" class="receipt-logo" />
+      <div class="receipt-header-info">
+        <h1>HOUSE OF GLORY</h1>
+        <h2>Assemblies of God</h2>
+        <p>Iron City, Kasoa | Tel: +233277743607</p>
+        <p>Email: info@houseofgloryag.org</p>
+      </div>
+    </div>
+    
+    <div class="receipt-title-wrap">
+      <div class="receipt-title">Official Tithe Receipt</div>
+    </div>
+    
+    <div class="receipt-body">
+      <div class="receipt-row">
+        <span class="receipt-label">Receipt No:</span>
+        <span class="receipt-value">${receiptNo}</span>
+      </div>
+      
+      <div class="receipt-row">
+        <span class="receipt-label">Date:</span>
+        <span class="receipt-value">${dateStr}</span>
+      </div>
+      
+      <div class="receipt-row">
+        <span class="receipt-label">Received From:</span>
+        <span class="receipt-value">${memberName}</span>
+      </div>
+      
+      <div class="receipt-row">
+        <span class="receipt-label">The Sum of (Amount):</span>
+        <span class="receipt-value">GHS ${amount}</span>
+      </div>
+      
+      <div class="receipt-row">
+        <span class="receipt-label">Payment Method:</span>
+        <div class="receipt-payment-methods">
+          <div class="receipt-checkbox">
+            <div class="receipt-checkbox-box">${paymentMethod === 'cash' ? '✓' : ''}</div>
+            <span>Cash</span>
+          </div>
+          <div class="receipt-checkbox">
+            <div class="receipt-checkbox-box">${paymentMethod === 'mobile_money' ? '✓' : ''}</div>
+            <span>Mobile Money</span>
+          </div>
+          <div class="receipt-checkbox">
+            <div class="receipt-checkbox-box">${paymentMethod === 'bank_transfer' ? '✓' : ''}</div>
+            <span>Bank Transfer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="receipt-footer">
+      <div class="receipt-signatures-row">
+        <div class="receipt-signature">
+          <div class="receipt-signature-line signature-text">${receivedBy || ''}</div>
+          <div class="receipt-signature-label">Treasurer</div>
+        </div>
+        <div class="receipt-stamp-pastor">
+        <div class="receipt-stamp"><img src="./images/stamp.png" alt="Church Stamp"></div>
+        
+        </div>
+        <div class="receipt-signature pastor-sig">
+          <div class="receipt-signature-line signature-text pastor-name">Ebenezer Joe Abaidoo</div>
+          <div class="receipt-signature-label">Pastor</div>
+        </div>
+        </div>
+        
+      </div>
+      
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('receipt-content').innerHTML = receiptHTML;
+  document.getElementById('receipt-print-container').innerHTML = `<div class="receipt-preview">${receiptHTML}</div>`;
+}
+
+// Get receipt styles for printing/PDF
+function getReceiptStyles() {
+  return `
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: white; }
+    .receipt-preview { max-width: 600px; margin: 0 auto; padding: 40px; background: white; }
+    .receipt-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #003DA5; }
+    .receipt-logo { width: 80px; height: 80px; object-fit: contain; }
+    .receipt-header-info { flex: 1; text-align: center; }
+    .receipt-header-info h1 { color: #003DA5; font-size: 26px; font-weight: 800; margin: 0 0 4px 0; }
+    .receipt-header-info h2 { color: #C5A000; font-size: 14px; font-weight: 700; margin: 0 0 10px 0; text-transform: uppercase; }
+    .receipt-header-info p { font-size: 11px; color: #666; margin: 2px 0; }
+    .receipt-title-wrap { text-align: center; margin: 25px 0; }
+    .receipt-title { background: #003DA5; color: #FFD700; text-align: center; padding: 12px 40px; font-size: 16px; font-weight: 700; text-transform: uppercase; display: inline-block; border-radius: 4px; }
+    .receipt-body { margin-top: 30px; }
+    .receipt-row { display: flex; flex-wrap: wrap; margin-bottom: 20px; align-items: baseline; }
+    .receipt-label { font-weight: 600; font-size: 13px; color: #333; min-width: 180px; }
+    .receipt-value { flex: 1; border-bottom: 1px solid #333; padding-bottom: 4px; font-size: 14px; min-height: 20px; }
+    .receipt-payment-methods { display: flex; gap: 30px; }
+    .receipt-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .receipt-checkbox-box { width: 16px; height: 16px; border: 1.5px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .receipt-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 70px; padding-top: 20px; }
+    .receipt-stamp { width: 100px; height: 100px; }
+    .receipt-stamp img { width: 100%; height: 100%; object-fit: contain; }
+    .receipt-signatures-row { display: flex; justify-content: space-between; width: 100%; margin-bottom: 30px; }
+    .receipt-stamp-pastor { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .receipt-signature { text-align: center; }
+    .receipt-signature-line { width: 180px; border-bottom: 1px solid #333; padding-bottom: 4px; margin-bottom: 6px; min-height: 30px; text-align: center; font-size: 14px; }
+    .receipt-signature-label { font-size: 12px; color: #666; font-weight: 600; text-transform: uppercase; }
+    .signature-text { font-family: 'Brush Script MT', 'Segoe Script', cursive; font-size: 20px; font-style: italic; color: #003DA5; }
+    .pastor-sig { margin-top: 10px; }
+    .pastor-name { font-size: 24px; color: #003DA5; }
+    @media print { body { padding: 0; } .receipt-preview { padding: 20px; } }
+  `;
+}
+
+// Print receipt
+function printReceipt() {
+  const printContent = document.getElementById('receipt-content').innerHTML;
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Tithe Receipt - House of Glory</title>
+      <style>${getReceiptStyles()}</style>
+    </head>
+    <body>
+      <div class="receipt-preview">${printContent}</div>
+      <script>window.onload = function() { window.print(); }<\/script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+// Download receipt as PDF
+function downloadReceiptPDF() {
+  const printContent = document.getElementById('receipt-content').innerHTML;
+  const memberName = currentReceiptData?.memberName || 'Member';
+  const receiptNo = currentReceiptData?.receiptNo || 'Receipt';
+  
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Tithe Receipt - ${memberName} - ${receiptNo}</title>
+      <style>${getReceiptStyles()}</style>
+    </head>
+    <body>
+      <div class="receipt-preview">${printContent}</div>
+      <script>
+        window.onload = function() {
+          // Trigger print dialog - user can save as PDF
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  
+  toast('Use "Save as PDF" in the print dialog to download', 'info');
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // DEPARTMENTS
