@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>House of Glory Church App</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root {
     --primary: #003DA5;
@@ -27,6 +28,73 @@
     --radius: 10px;
     --shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
+
+  /* Dark Theme */
+  [data-theme="dark"] {
+    --bg: #1a1a2e;
+    --card-bg: #16213e;
+    --text: #e8e8e8;
+    --text-muted: #a0a0b0;
+    --border: #2d3748;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+    --sidebar-bg: #0f0f1a;
+  }
+  [data-theme="dark"] .login-form-panel { background: #1a1a2e; }
+  [data-theme="dark"] .login-card { background: #16213e; box-shadow: 0 10px 45px rgba(0,0,0,0.3); }
+  [data-theme="dark"] .login-card h1 { color: var(--accent); }
+  [data-theme="dark"] .form-group input,
+  [data-theme="dark"] .form-group select,
+  [data-theme="dark"] .form-group textarea { background: #0f0f1a; border-color: var(--border); color: var(--text); }
+  [data-theme="dark"] .topbar { background: var(--card-bg); border-color: var(--border); }
+  [data-theme="dark"] .card { background: var(--card-bg); }
+  [data-theme="dark"] .stat-card { background: var(--card-bg); }
+  [data-theme="dark"] .table-wrapper { background: var(--card-bg); }
+  [data-theme="dark"] thead th { background: #0f0f1a; color: var(--text-muted); }
+  [data-theme="dark"] tbody td { border-color: var(--border); }
+  [data-theme="dark"] tbody tr:hover { background: rgba(255,255,255,0.03); }
+  [data-theme="dark"] .modal { background: var(--card-bg); }
+  [data-theme="dark"] .btn-icon { background: var(--card-bg); border-color: var(--border); color: var(--text); }
+  [data-theme="dark"] .search-box { background: #0f0f1a; color: var(--text); border-color: var(--border); }
+  [data-theme="dark"] .member-card { background: var(--card-bg); }
+  [data-theme="dark"] .quick-action { background: var(--card-bg); border-color: var(--border); color: var(--text); }
+  [data-theme="dark"] .quick-action:hover { background: #1a1a2e; border-color: var(--primary); }
+  [data-theme="dark"] .chart-container { background: var(--card-bg); }
+  [data-theme="dark"] .member-stat { background: var(--card-bg); }
+  [data-theme="dark"] .view-toggle { background: #0f0f1a; }
+  [data-theme="dark"] .view-toggle button { color: var(--text-muted); }
+  [data-theme="dark"] .view-toggle button.active { background: var(--primary); color: white; }
+  [data-theme="dark"] .profile-section { background: #0f0f1a; }
+  [data-theme="dark"] .profile-field { background: var(--card-bg); }
+  [data-theme="dark"] .profile-main { background: #1a1a2e; }
+  [data-theme="dark"] .profile-tabs { background: var(--card-bg); border-color: var(--border); }
+  [data-theme="dark"] .backup-card { background: var(--card-bg); }
+  [data-theme="dark"] .bible-text { background: var(--card-bg); }
+
+  /* Theme Toggle Button */
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--text);
+    transition: all 0.3s ease;
+  }
+  .theme-toggle:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: rotate(180deg);
+  }
+  .theme-toggle .fa-sun { display: none; }
+  .theme-toggle .fa-moon { display: block; }
+  [data-theme="dark"] .theme-toggle .fa-sun { display: block; }
+  [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 
@@ -454,6 +522,52 @@
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: #bbb; }
 
+  /* ─── MEMBER DROPDOWN ─── */
+  .member-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .member-dropdown-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s;
+  }
+  .member-dropdown-item:hover {
+    background: var(--bg);
+  }
+  .member-dropdown-item .member-avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .member-dropdown-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
   /* ─── FINANCE SUMMARY ─── */
   .finance-type-income { color: var(--success); font-weight: 600; }
   .finance-type-expense { color: var(--danger); font-weight: 600; }
@@ -469,6 +583,82 @@
   .priority-high { color: var(--danger); font-weight: 600; }
   .priority-medium { color: var(--warning); font-weight: 600; }
   .priority-low { color: var(--success); font-weight: 600; }
+
+  /* ─── FINANCE PAGE ─── */
+  .finance-summary-cards { display: grid; grid-template-columns: repeat(4, 1fr) minmax(180px, auto); gap: 16px; margin-bottom: 24px; }
+  .fin-summary-card { background: linear-gradient(135deg, #1a2332 0%, #252f3e 100%); border-radius: 12px; padding: 20px 24px; text-align: center; }
+  .fin-summary-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); letter-spacing: 1px; margin-bottom: 8px; }
+  .fin-summary-value { font-size: 22px; font-weight: 700; color: white; }
+  .fin-summary-card.grand-total { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
+
+  .finance-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .finance-chart-card { background: linear-gradient(135deg, #1a2332 0%, #252f3e 100%); border-radius: 14px; padding: 24px; }
+  .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .chart-header h3 { font-size: 16px; font-weight: 600; color: white; margin: 0; }
+  .btn-gold { background: linear-gradient(135deg, #C5A000 0%, #FFD700 100%); color: #1a1a1a; font-weight: 600; border: none; }
+  .btn-gold:hover { background: linear-gradient(135deg, #d4af00 0%, #ffe44d 100%); transform: translateY(-1px); }
+
+  .bar-chart-container, .line-chart-container, .donut-chart-container { position: relative; height: 280px; }
+  .donut-chart-container { height: 240px; display: flex; justify-content: center; }
+
+  .chart-legend { display: flex; gap: 20px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.8); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-dot.blue { background: #3b82f6; }
+  .legend-dot.red { background: #ef4444; }
+  .legend-dot.green { background: #22c55e; }
+  .legend-dot.orange { background: #f59e0b; }
+
+  .campaign-table { width: 100%; border-collapse: collapse; }
+  .campaign-table thead th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .campaign-table tbody td { padding: 16px; font-size: 14px; color: white; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .campaign-table tbody tr:last-child td { border-bottom: none; }
+  .cat-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; }
+  .cat-dot.blue { background: #3b82f6; }
+  .cat-dot.red { background: #ef4444; }
+  .cat-dot.green { background: #22c55e; }
+  .cat-dot.orange { background: #f59e0b; }
+  .percent-badge { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .percent-badge.blue { background: rgba(59,130,246,0.2); color: #60a5fa; }
+  .percent-badge.red { background: rgba(239,68,68,0.2); color: #f87171; }
+  .percent-badge.green { background: rgba(34,197,94,0.2); color: #4ade80; }
+  .percent-badge.orange { background: rgba(245,158,11,0.2); color: #fbbf24; }
+
+  .finance-tabs { display: flex; gap: 8px; margin-bottom: 20px; padding: 0 4px; }
+  .fin-tab { padding: 8px 16px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .fin-tab:hover { color: rgba(255,255,255,0.8); }
+  .fin-tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+  .fin-tab[data-cat="baskets"].active { color: #3b82f6; border-bottom-color: #3b82f6; }
+  .fin-tab[data-cat="welfares"].active { color: #ef4444; border-bottom-color: #ef4444; }
+  .fin-tab[data-cat="offerings"].active { color: #22c55e; border-bottom-color: #22c55e; }
+  .fin-tab[data-cat="donations"].active { color: #f59e0b; border-bottom-color: #f59e0b; }
+
+  .transactions-table { width: 100%; border-collapse: collapse; }
+  .transactions-table thead th { padding: 14px 16px; text-align: left; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .transactions-table tbody td { padding: 14px 16px; font-size: 14px; color: white; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .transactions-table tbody tr:last-child td { border-bottom: none; }
+  .transactions-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+  .cat-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .cat-badge.baskets { background: rgba(59,130,246,0.2); color: #60a5fa; }
+  .cat-badge.welfares { background: rgba(239,68,68,0.2); color: #f87171; }
+  .cat-badge.offerings { background: rgba(34,197,94,0.2); color: #4ade80; }
+  .cat-badge.donations { background: rgba(245,158,11,0.2); color: #fbbf24; }
+  .amount-col { color: #22c55e; font-weight: 600; }
+  .action-btns { display: flex; gap: 8px; }
+  .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.2s; }
+  .action-btn.edit { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .action-btn.edit:hover { background: rgba(59,130,246,0.3); }
+  .action-btn.delete { background: rgba(239,68,68,0.15); color: #f87171; }
+  .action-btn.delete:hover { background: rgba(239,68,68,0.3); }
+
+  @media (max-width: 1200px) {
+    .finance-summary-cards { grid-template-columns: repeat(3, 1fr); }
+    .finance-charts-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .finance-summary-cards { grid-template-columns: repeat(2, 1fr); }
+    .fin-summary-card.grand-total { grid-column: span 2; }
+  }
 </style>
 </head>
 <body>
@@ -561,6 +751,10 @@
     <div class="topbar">
       <h2 id="section-title">Dashboard</h2>
       <div class="topbar-actions" id="topbar-actions"></div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+      </button>
     </div>
     <div class="content">
 
@@ -736,39 +930,98 @@
 
       <!-- ── FINANCE ── -->
       <div class="section" id="section-finance">
-        <div class="stat-cards" style="grid-template-columns:repeat(4,1fr);">
-          <div class="stat-card"><div class="stat-icon green"></div><div><div class="stat-label">Total Income</div><div class="stat-value" id="fin-income">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon red"></div><div><div class="stat-label">Total Expenses</div><div class="stat-value" id="fin-expenses">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon gold"></div><div><div class="stat-label">Total Tithes</div><div class="stat-value" id="fin-tithes">—</div></div></div>
-          <div class="stat-card"><div class="stat-icon blue"></div><div><div class="stat-label">Balance</div><div class="stat-value" id="fin-balance">—</div></div></div>
-        </div>
-        <div class="tabs">
-          <div class="tab active" onclick="switchTab('finance','transactions')">Transactions</div>
-          <div class="tab" onclick="switchTab('finance','tithes')">Tithes</div>
-        </div>
-        <div id="finance-tab-transactions">
-          <div class="table-wrapper">
-            <div class="table-header">
-              <h3>Transactions</h3>
-              <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('fin-tbody', this.value, [0,1,2])" />
-            </div>
-            <table>
-              <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount (GHS)</th><th>Actions</th></tr></thead>
-              <tbody id="fin-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
-            </table>
+        <!-- Summary Cards -->
+        <div class="finance-summary-cards">
+          <div class="fin-summary-card">
+            <div class="fin-summary-label">OFFERINGS</div>
+            <div class="fin-summary-value" id="fin-offerings">GH₵0</div>
+          </div>
+          <div class="fin-summary-card">
+            <div class="fin-summary-label">TITHE</div>
+            <div class="fin-summary-value" id="fin-tithe">GH₵0</div>
+          </div>
+          <div class="fin-summary-card">
+            <div class="fin-summary-label">COF</div>
+            <div class="fin-summary-value" id="fin-cof">GH₵0</div>
+          </div>
+          <div class="fin-summary-card expense-card">
+            <div class="fin-summary-label">EXPENSE</div>
+            <div class="fin-summary-value" id="fin-expense">GH₵0</div>
+          </div>
+          <div class="fin-summary-card grand-total">
+            <div class="fin-summary-label" id="fin-total-label">BALANCE</div>
+            <div class="fin-summary-value" id="fin-grand-total">GH₵0</div>
           </div>
         </div>
-        <div id="finance-tab-tithes" style="display:none;">
-          <div class="table-wrapper">
-            <div class="table-header">
-              <h3>Tithes</h3>
-              <input type="text" class="search-box" placeholder="Search…" oninput="filterTable('tithes-tbody', this.value, [0,1,2])" />
+
+        <!-- Print Statement Button -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+          <button class="btn btn-primary" onclick="openStatementModal()"><i class="fas fa-print"></i> Print Financial Statement</button>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="finance-charts-row">
+          <!-- Incomes Chart -->
+          <div class="finance-chart-card">
+            <div class="chart-header">
+              <h3>Incomes</h3>
+              <button class="btn btn-gold btn-sm" onclick="openIncomesModal()"><i class="fas fa-pen"></i> Edit Incomes</button>
             </div>
-            <table>
-              <thead><tr><th>Date</th><th>Member</th><th>Amount (GHS)</th><th>Notes</th><th>Actions</th></tr></thead>
-              <tbody id="tithes-tbody"><tr><td colspan="5" class="loading">Loading…</td></tr></tbody>
-            </table>
+            <div class="bar-chart-container" id="incomes-chart">
+              <canvas id="incomesCanvas"></canvas>
+            </div>
+            <div class="chart-legend" id="incomes-legend">
+              <span class="legend-item"><span class="legend-dot blue"></span> Offerings</span>
+              <span class="legend-item"><span class="legend-dot green"></span> Tithes</span>
+              <span class="legend-item"><span class="legend-dot orange"></span> COF</span>
+              <span class="legend-item"><span class="legend-dot purple"></span> Fund Raising</span>
+            </div>
           </div>
+
+          <!-- Expenses Chart -->
+          <div class="finance-chart-card">
+            <div class="chart-header">
+              <h3>Expenses</h3>
+              <button class="btn btn-gold btn-sm" onclick="openExpensesModal()"><i class="fas fa-pen"></i> Edit Expenses</button>
+            </div>
+            <div class="bar-chart-container" id="expenses-chart">
+              <canvas id="expensesCanvas"></canvas>
+            </div>
+            <div class="chart-legend" id="expenses-legend">
+              <span class="legend-item"><span class="legend-dot red"></span> Utilities</span>
+              <span class="legend-item"><span class="legend-dot cyan"></span> Salaries</span>
+              <span class="legend-item"><span class="legend-dot yellow"></span> Maintenance</span>
+              <span class="legend-item"><span class="legend-dot pink"></span> Other</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions Tabs -->
+        <div class="finance-tabs">
+          <div class="fin-tab active" data-cat="all" onclick="filterFinanceTab('all')">All</div>
+          <div class="fin-tab" data-cat="offerings" onclick="filterFinanceTab('offerings')">Offerings</div>
+          <div class="fin-tab" data-cat="tithe" onclick="filterFinanceTab('tithe')">Tithe</div>
+          <div class="fin-tab" data-cat="cof" onclick="filterFinanceTab('cof')">COF</div>
+          <div class="fin-tab" data-cat="expense" onclick="filterFinanceTab('expense')">Expense</div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="finance-chart-card" style="margin-top: 0;">
+          <div class="chart-header">
+            <h3>Recent Transactions</h3>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-primary btn-sm" onclick="openIncomeModal()"><i class="fas fa-plus"></i> Add Income</button>
+              <button class="btn btn-danger btn-sm" onclick="openExpenseModal()"><i class="fas fa-minus"></i> Add Expense</button>
+            </div>
+          </div>
+          <table class="transactions-table">
+            <thead>
+              <tr><th>DESCRIPTION</th><th>DATE</th><th>CATEGORY</th><th>AMOUNT</th><th></th></tr>
+            </thead>
+            <tbody id="fin-tbody">
+              <tr><td colspan="5" class="loading">Loading…</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -1192,8 +1445,8 @@
       <div class="form-group"><label>Amount (GHS) *</label><input id="f-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Category</label>
-        <select id="f-category"><option value="">Select…</option><option value="tithe">Tithe</option><option value="offering">Offering</option><option value="donation">Donation</option><option value="salary">Salary</option><option value="utilities">Utilities</option><option value="maintenance">Maintenance</option><option value="other">Other</option></select>
+      <div class="form-group"><label>Category *</label>
+        <select id="f-category"><option value="">Select…</option><option value="Baskets">Baskets</option><option value="Welfares">Welfares</option><option value="Offerings">Offerings</option><option value="Donations">Donations</option></select>
       </div>
       <div class="form-group"><label>Date *</label><input id="f-date" type="date" /></div>
     </div>
@@ -1206,13 +1459,145 @@
   </div>
 </div>
 
+<!-- Quarters Edit Modal -->
+<div class="modal-overlay" id="quarters-modal" style="display:none;" onclick="closeModalOnBg(event,'quarters-modal')">
+  <div class="modal modal-lg" onclick="event.stopPropagation()">
+    <h3>Edit Quarterly Data</h3>
+    <div style="max-height: 400px; overflow-y: auto;">
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">Q1 2023</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="q-q1-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="q-q1-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="q-q1-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="q-q1-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">Q2 2023</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="q-q2-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="q-q2-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="q-q2-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="q-q2-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">Q3 2023</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="q-q3-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="q-q3-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="q-q3-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="q-q3-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">Q4 2023</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="q-q4-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="q-q4-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="q-q4-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="q-q4-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('quarters-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveQuarters()">Save Quarters</button>
+    </div>
+  </div>
+</div>
+
+<!-- Revenue Edit Modal -->
+<div class="modal-overlay" id="revenue-modal" style="display:none;" onclick="closeModalOnBg(event,'revenue-modal')">
+  <div class="modal modal-lg" onclick="event.stopPropagation()">
+    <h3>Edit Monthly Revenue</h3>
+    <div style="max-height: 400px; overflow-y: auto;">
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">January</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="r-jan-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="r-jan-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="r-jan-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="r-jan-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">February</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="r-feb-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="r-feb-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="r-feb-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="r-feb-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">March</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="r-mar-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="r-mar-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="r-mar-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="r-mar-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">April</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="r-apr-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="r-apr-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="r-apr-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="r-apr-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+      <h4 style="margin: 16px 0 10px; font-size: 14px; color: var(--primary);">May</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Baskets</label><input id="r-may-baskets" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Welfares</label><input id="r-may-welfares" type="number" min="0" step="0.01" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Offerings</label><input id="r-may-offerings" type="number" min="0" step="0.01" /></div>
+        <div class="form-group"><label>Donations</label><input id="r-may-donations" type="number" min="0" step="0.01" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('revenue-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRevenue()">Save Revenue</button>
+    </div>
+  </div>
+</div>
+
+<!-- Campaign Edit Modal -->
+<div class="modal-overlay" id="campaign-modal" style="display:none;" onclick="closeModalOnBg(event,'campaign-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Edit Campaign Data</h3>
+    <div class="form-row">
+      <div class="form-group"><label>Baskets</label><input id="c-baskets" type="number" min="0" step="0.01" /></div>
+      <div class="form-group"><label>Welfares</label><input id="c-welfares" type="number" min="0" step="0.01" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Offerings</label><input id="c-offerings" type="number" min="0" step="0.01" /></div>
+      <div class="form-group"><label>Donations</label><input id="c-donations" type="number" min="0" step="0.01" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('campaign-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCampaign()">Save Campaign</button>
+    </div>
+  </div>
+</div>
+
 <!-- Tithe Modal -->
 <div class="modal-overlay" id="tithe-modal" style="display:none;" onclick="closeModalOnBg(event,'tithe-modal')">
   <div class="modal" onclick="event.stopPropagation()">
     <h3 id="tithe-modal-title">Add Tithe</h3>
-    <input type="hidden" id="tithe-id" />
+    <input type="hidden" id="tithe-edit-id" />
     <div class="form-row">
-      <div class="form-group"><label>Member Name *</label><input id="t-member" type="text" placeholder="Member name" /></div>
+      <div class="form-group" style="position: relative;">
+        <label>Member Name *</label>
+        <input id="t-member" type="text" placeholder="Search member..." autocomplete="off" oninput="filterTitheMemberList(this.value)" onfocus="showTitheMemberDropdown()" />
+        <div id="tithe-member-dropdown" class="member-dropdown" style="display:none;">
+          <!-- Member suggestions will appear here -->
+        </div>
+      </div>
       <div class="form-group"><label>Amount (GHS) *</label><input id="t-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
     </div>
     <div class="form-group"><label>Date *</label><input id="t-date" type="date" /></div>
@@ -1220,6 +1605,100 @@
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('tithe-modal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveTithe()">Save Tithe</button>
+    </div>
+  </div>
+</div>
+
+<!-- Expense Modal -->
+<div class="modal-overlay" id="expense-modal" style="display:none;" onclick="closeModalOnBg(event,'expense-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Add Expense</h3>
+    <input type="hidden" id="expense-id" />
+    <div class="form-row">
+      <div class="form-group"><label>Amount (GHS) *</label><input id="e-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
+      <div class="form-group"><label>Date *</label><input id="e-date" type="date" /></div>
+    </div>
+    <div class="form-group"><label>Category</label>
+      <select id="e-category">
+        <option value="utilities">Utilities</option>
+        <option value="salaries">Salaries</option>
+        <option value="maintenance">Maintenance</option>
+        <option value="supplies">Supplies</option>
+        <option value="transport">Transport</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Description</label><input id="e-desc" type="text" placeholder="Expense description..." /></div>
+    <div class="form-group"><label>Notes</label><textarea id="e-notes" placeholder="Additional notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('expense-modal')">Cancel</button>
+      <button class="btn btn-danger" onclick="saveExpense()"><i class="fas fa-save"></i> Save Expense</button>
+    </div>
+  </div>
+</div>
+
+<!-- Financial Statement Modal -->
+<div class="modal-overlay" id="statement-modal" style="display:none;" onclick="closeModalOnBg(event,'statement-modal')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+    <h3><i class="fas fa-file-invoice-dollar"></i> Generate Financial Statement</h3>
+    <div class="form-group">
+      <label>Select Period</label>
+      <select id="stmt-period" onchange="handleStatementPeriodChange()">
+        <option value="this-month">This Month</option>
+        <option value="last-month">Last Month</option>
+        <option value="this-quarter">This Quarter</option>
+        <option value="this-year">This Year</option>
+        <option value="jan-jun">January - June</option>
+        <option value="jul-dec">July - December</option>
+        <option value="custom">Custom Range</option>
+      </select>
+    </div>
+    <div id="custom-date-range" style="display:none;">
+      <div class="form-row">
+        <div class="form-group"><label>From Date</label><input id="stmt-from" type="date" /></div>
+        <div class="form-group"><label>To Date</label><input id="stmt-to" type="date" /></div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Statement Title (Optional)</label>
+      <input id="stmt-title" type="text" placeholder="e.g. Q1 2026 Financial Report" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('statement-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="generateStatement()"><i class="fas fa-print"></i> Generate & Print</button>
+    </div>
+  </div>
+</div>
+
+<!-- Income Modal -->
+<div class="modal-overlay" id="income-modal" style="display:none;" onclick="closeModalOnBg(event,'income-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Add Income</h3>
+    <input type="hidden" id="income-id" />
+    <div class="form-row">
+      <div class="form-group"><label>Amount (GHS) *</label><input id="i-amount" type="number" min="0" step="0.01" placeholder="0.00" /></div>
+      <div class="form-group"><label>Date *</label><input id="i-date" type="date" /></div>
+    </div>
+    <div class="form-group"><label>Category *</label>
+      <select id="i-category">
+        <option value="offering">Offering</option>
+        <option value="tithe">Tithe</option>
+        <option value="cof">COF (Covenant Offering Fund)</option>
+        <option value="donation">Donation</option>
+        <option value="fundraising">Fund Raising</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="form-group" id="income-member-group" style="display:none; position: relative;">
+      <label>Member Name (for Tithe)</label>
+      <input id="i-member" type="text" placeholder="Search member..." autocomplete="off" oninput="filterIncomeMemberList(this.value)" onfocus="showIncomeMemberDropdown()" />
+      <div id="income-member-dropdown" class="member-dropdown" style="display:none;"></div>
+    </div>
+    <div class="form-group"><label>Description</label><input id="i-desc" type="text" placeholder="Short description..." /></div>
+    <div class="form-group"><label>Notes</label><textarea id="i-notes" placeholder="Additional notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('income-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveIncome()"><i class="fas fa-save"></i> Save Income</button>
     </div>
   </div>
 </div>
@@ -1448,7 +1927,7 @@ function navigateTo(name) {
   const addBtns = {
     members: `<button class="btn btn-primary" onclick="openMemberModal()">+ Add Member</button>`,
     departments: `<button class="btn btn-primary" onclick="openDeptModal()">+ Add Department</button>`,
-    finance: `<button class="btn btn-primary" onclick="openFinModal()">+ Add Transaction</button><button class="btn btn-outline" onclick="openTitheModal()" style="margin-left:6px;">+ Add Tithe</button>`,
+    finance: `<button class="btn btn-primary" onclick="openIncomeModal()">+ Add Income</button><button class="btn btn-danger" onclick="openExpenseModal()" style="margin-left:6px;">+ Add Expense</button><button class="btn btn-outline" onclick="openTitheModal()" style="margin-left:6px;">+ Add Tithe</button>`,
     sermons: `<button class="btn btn-primary" onclick="openSermonModal()">+ Add Sermon</button>`,
     announcements: `<button class="btn btn-primary" onclick="openAnnModal()">+ Add Announcement</button>`,
     media: `<button class="btn btn-primary" onclick="openMediaModal()">+ Upload Media</button>`,
@@ -2491,54 +2970,343 @@ async function deleteDept(id, name) {
 // ═══════════════════════════════════════════════════════════════════
 // FINANCE
 // ═══════════════════════════════════════════════════════════════════
+
+// Chart instances
+let quarterlyChart = null;
+let revenueChart = null;
+let campaignChart = null;
+
+// Finance data storage
+let financeData = {
+  transactions: [],
+  quarterly: {
+    Q1: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    Q2: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    Q3: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    Q4: { baskets: 0, welfares: 0, offerings: 0, donations: 0 }
+  },
+  monthly: {
+    Jan: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    Feb: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    Mar: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    Apr: { baskets: 0, welfares: 0, offerings: 0, donations: 0 },
+    May: { baskets: 0, welfares: 0, offerings: 0, donations: 0 }
+  },
+  totals: { baskets: 0, welfares: 0, offerings: 0, donations: 0 }
+};
+
+let currentFinanceFilter = 'all';
+
 async function loadFinance() {
   try {
-    const stats = await api.finance.getStats();
-    if (stats?.data) {
-      document.getElementById('fin-income').textContent = fmt(stats.data.totalIncome);
-      document.getElementById('fin-expenses').textContent = fmt(stats.data.totalExpenses);
-      document.getElementById('fin-tithes').textContent = fmt(stats.data.totalTithes);
-      document.getElementById('fin-balance').textContent = fmt(stats.data.balance);
-    }
     const list = await api.finance.getAll() || [];
-    const tbody = document.getElementById('fin-tbody');
-    if (!list.length) { tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><p>No transactions yet.</p></div></td></tr>'; return; }
-    tbody.innerHTML = list.map(t => `
-      <tr>
-        <td>${fmtDate(t.date)}</td>
-        <td><span class="finance-type-${t.type}">${t.type || '—'}</span></td>
-        <td>${t.category || '—'}</td>
-        <td>${t.description || '—'}</td>
-        <td><strong>${fmt(t.amount)}</strong></td>
-        <td><div class="actions-col">
-          <button class="btn-icon" onclick="openFinModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
-          <button class="btn-icon danger" onclick="deleteFin('${t.id}')"><i class="fas fa-trash-alt"></i></button>
-        </div></td>
-      </tr>`).join('');
-  } catch { toast('Failed to load finance.', 'error'); }
+    financeData.transactions = list;
+    
+    // Calculate totals by category - updated to match new categories
+    const totals = { offerings: 0, tithe: 0, cof: 0, expense: 0 };
+    const incomeTotals = { offerings: 0, tithe: 0, cof: 0, fundraising: 0 };
+    const expenseTotals = { utilities: 0, salaries: 0, maintenance: 0, other: 0 };
+    
+    list.forEach(t => {
+      const cat = (t.category || '').toLowerCase();
+      const type = (t.type || '').toLowerCase();
+      const amount = parseFloat(t.amount) || 0;
+      
+      // Calculate totals
+      if (type === 'expense') {
+        totals.expense += amount;
+        if (cat === 'utilities') expenseTotals.utilities += amount;
+        else if (cat === 'salaries') expenseTotals.salaries += amount;
+        else if (cat === 'maintenance') expenseTotals.maintenance += amount;
+        else expenseTotals.other += amount;
+      } else {
+        // Income categories
+        if (cat === 'offering' || cat === 'offerings') { totals.offerings += amount; incomeTotals.offerings += amount; }
+        else if (cat === 'tithe' || cat === 'tithes') { totals.tithe += amount; incomeTotals.tithe += amount; }
+        else if (cat === 'cof' || cat === 'covenant offering fund') { totals.cof += amount; incomeTotals.cof += amount; }
+        else if (cat === 'fundraising' || cat === 'fund raising') { incomeTotals.fundraising += amount; }
+        else { totals.offerings += amount; incomeTotals.offerings += amount; } // Default to offerings
+      }
+    });
+    
+    financeData.totals = totals;
+    financeData.incomeTotals = incomeTotals;
+    financeData.expenseTotals = expenseTotals;
+    
+    // Update summary cards - use correct IDs from HTML
+    const totalIncome = totals.offerings + totals.tithe + totals.cof;
+    const grandTotal = totalIncome - totals.expense;
+    
+    const offeringsEl = document.getElementById('fin-offerings');
+    const titheEl = document.getElementById('fin-tithe');
+    const cofEl = document.getElementById('fin-cof');
+    const expenseEl = document.getElementById('fin-expense');
+    const grandTotalEl = document.getElementById('fin-grand-total');
+    const totalLabelEl = document.getElementById('fin-total-label');
+    
+    if (offeringsEl) offeringsEl.textContent = 'GH₵' + totals.offerings.toLocaleString();
+    if (titheEl) titheEl.textContent = 'GH₵' + totals.tithe.toLocaleString();
+    if (cofEl) cofEl.textContent = 'GH₵' + totals.cof.toLocaleString();
+    if (expenseEl) expenseEl.textContent = 'GH₵' + totals.expense.toLocaleString();
+    
+    // Always show absolute value, indicate surplus or deficit
+    const absTotal = Math.abs(grandTotal);
+    if (grandTotalEl) grandTotalEl.textContent = 'GH₵' + absTotal.toLocaleString();
+    if (totalLabelEl) {
+      if (grandTotal >= 0) {
+        totalLabelEl.textContent = 'SURPLUS';
+        grandTotalEl.style.color = '#22c55e'; // Green for surplus
+      } else {
+        totalLabelEl.textContent = 'DEFICIT';
+        grandTotalEl.style.color = '#ef4444'; // Red for deficit
+      }
+    }
+    
+    // Render transactions and charts
+    renderFinanceTransactions();
+    renderIncomesChart();
+    renderExpensesChart();
+    
+  } catch(e) { 
+    console.error('Error loading finance:', e); 
+    toast('Failed to load finance data.', 'error'); 
+  }
 }
 
-async function loadTithes() {
-  const tbody = document.getElementById('tithes-tbody');
-  tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading…</td></tr>';
-  try {
-    const list = await api.finance.getTithes() || [];
-    if (!list.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><p>No tithes recorded.</p></div></td></tr>'; return; }
-    tbody.innerHTML = list.map(t => `
-      <tr>
-        <td>${fmtDate(t.date)}</td>
-        <td>${t.memberName || t.member || '—'}</td>
-        <td><strong>${fmt(t.amount)}</strong></td>
-        <td>${t.notes || '—'}</td>
-        <td><div class="actions-col">
-          <button class="btn-icon" onclick="openTitheModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
-          <button class="btn-icon danger" onclick="deleteTithe('${t.id}')"><i class="fas fa-trash-alt"></i></button>
-        </div></td>
-      </tr>`).join('');
-  } catch { tbody.innerHTML = '<tr><td colspan="5" class="loading">Failed to load.</td></tr>'; }
+// Render Incomes Chart  
+function renderIncomesChart() {
+  const ctx = document.getElementById('incomesCanvas');
+  if (!ctx) return;
+  
+  // Destroy existing chart if any
+  if (window.incomesChartInstance) window.incomesChartInstance.destroy();
+  
+  const data = financeData.incomeTotals || { offerings: 0, tithe: 0, cof: 0, fundraising: 0 };
+  
+  window.incomesChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Offerings', 'Tithes', 'COF', 'Fund Raising'],
+      datasets: [{
+        data: [data.offerings, data.tithe, data.cof, data.fundraising],
+        backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6'],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)' } },
+        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'rgba(255,255,255,0.6)', callback: v => 'GH₵' + v } }
+      }
+    }
+  });
 }
 
-function openFinModal(t) {
+// Render Expenses Chart
+function renderExpensesChart() {
+  const ctx = document.getElementById('expensesCanvas');
+  if (!ctx) return;
+  
+  // Destroy existing chart if any
+  if (window.expensesChartInstance) window.expensesChartInstance.destroy();
+  
+  const data = financeData.expenseTotals || { utilities: 0, salaries: 0, maintenance: 0, other: 0 };
+  
+  window.expensesChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Utilities', 'Salaries', 'Maintenance', 'Other'],
+      datasets: [{
+        data: [data.utilities, data.salaries, data.maintenance, data.other],
+        backgroundColor: ['#ef4444', '#06b6d4', '#eab308', '#ec4899'],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)' } },
+        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'rgba(255,255,255,0.6)', callback: v => 'GH₵' + v } }
+      }
+    }
+  });
+}
+
+function renderFinanceTransactions() {
+  const tbody = document.getElementById('fin-tbody');
+  let filtered = financeData.transactions;
+  
+  if (currentFinanceFilter !== 'all') {
+    filtered = filtered.filter(t => {
+      const cat = (t.category || '').toLowerCase();
+      const type = (t.type || '').toLowerCase();
+      
+      if (currentFinanceFilter === 'expense') {
+        return type === 'expense';
+      } else if (currentFinanceFilter === 'offerings') {
+        return cat === 'offering' || cat === 'offerings';
+      } else if (currentFinanceFilter === 'tithe') {
+        return cat === 'tithe' || cat === 'tithes';
+      } else if (currentFinanceFilter === 'cof') {
+        return cat === 'cof' || cat === 'covenant offering fund';
+      }
+      return cat.includes(currentFinanceFilter);
+    });
+  }
+  
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state" style="padding:30px;text-align:center;color:rgba(255,255,255,0.5);">No transactions found.</div></td></tr>';
+    return;
+  }
+  
+  // Sort by date descending
+  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  tbody.innerHTML = filtered.slice(0, 20).map(t => {
+    const cat = (t.category || '').toLowerCase();
+    const type = (t.type || '').toLowerCase();
+    const isExpense = type === 'expense';
+    let catClass = cat;
+    if (cat === 'offering') catClass = 'offerings';
+    else if (cat === 'tithe' || cat === 'tithes') catClass = 'offerings'; // Green color
+    else if (cat === 'cof') catClass = 'donations'; // Orange color
+    
+    const amountClass = isExpense ? 'color: #ef4444;' : 'color: #22c55e;';
+    const amountPrefix = isExpense ? '-' : '+';
+    
+    return `
+    <tr>
+      <td>${t.description || t.memberName || '—'}</td>
+      <td>${fmtDate(t.date)}</td>
+      <td><span class="cat-badge ${isExpense ? 'welfares' : catClass}">${isExpense ? 'Expense' : (t.category || '—')}</span></td>
+      <td style="${amountClass} font-weight: 600;">${amountPrefix}GH₵${(parseFloat(t.amount)||0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn edit" onclick="${isExpense ? 'openExpenseModal' : 'openIncomeModal'}(${JSON.stringify(t).replace(/"/g,'&quot;')})"><i class="fas fa-pen"></i></button>
+          <button class="action-btn delete" onclick="deleteFin('${t.id}')"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterFinanceTab(cat) {
+  currentFinanceFilter = cat;
+  document.querySelectorAll('.fin-tab').forEach(t => t.classList.remove('active'));
+  const activeTab = document.querySelector(`.fin-tab[data-cat="${cat}"]`);
+  if (activeTab) activeTab.classList.add('active');
+  renderFinanceTransactions();
+}
+
+function renderFinanceCharts() {
+  renderQuarterlyChart();
+  renderRevenueChart();
+  renderCampaignChart();
+}
+
+function renderQuarterlyChart() {
+  const ctx = document.getElementById('quarterlyCanvas');
+  if (!ctx) return;
+  
+  if (quarterlyChart) quarterlyChart.destroy();
+  
+  const q = financeData.quarterly;
+  quarterlyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Q1 2023', 'Q2 2023', 'Q3 2023', 'Q4 2023'],
+      datasets: [
+        { label: 'Baskets', data: [q.Q1.baskets, q.Q2.baskets, q.Q3.baskets, q.Q4.baskets], backgroundColor: '#3b82f6' },
+        { label: 'Welfares', data: [q.Q1.welfares, q.Q2.welfares, q.Q3.welfares, q.Q4.welfares], backgroundColor: '#ef4444' },
+        { label: 'Offerings', data: [q.Q1.offerings, q.Q2.offerings, q.Q3.offerings, q.Q4.offerings], backgroundColor: '#22c55e' },
+        { label: 'Donations', data: [q.Q1.donations, q.Q2.donations, q.Q3.donations, q.Q4.donations], backgroundColor: '#f59e0b' }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)' } },
+        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'rgba(255,255,255,0.6)', callback: v => 'GH₵' + v } }
+      }
+    }
+  });
+}
+
+function renderRevenueChart() {
+  const ctx = document.getElementById('revenueCanvas');
+  if (!ctx) return;
+  
+  if (revenueChart) revenueChart.destroy();
+  
+  const m = financeData.monthly;
+  revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+      datasets: [
+        { label: 'Baskets', data: [m.Jan.baskets, m.Feb.baskets, m.Mar.baskets, m.Apr.baskets, m.May.baskets], borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.4 },
+        { label: 'Welfares', data: [m.Jan.welfares, m.Feb.welfares, m.Mar.welfares, m.Apr.welfares, m.May.welfares], borderColor: '#ef4444', backgroundColor: 'transparent', tension: 0.4 },
+        { label: 'Offerings', data: [m.Jan.offerings, m.Feb.offerings, m.Mar.offerings, m.Apr.offerings, m.May.offerings], borderColor: '#22c55e', backgroundColor: 'transparent', tension: 0.4 },
+        { label: 'Donations', data: [m.Jan.donations, m.Feb.donations, m.Mar.donations, m.Apr.donations, m.May.donations], borderColor: '#f59e0b', backgroundColor: 'transparent', tension: 0.4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.6)' } },
+        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'rgba(255,255,255,0.6)', callback: v => 'GH₵' + v } }
+      }
+    }
+  });
+}
+
+function renderCampaignChart() {
+  const ctx = document.getElementById('campaignCanvas');
+  if (!ctx) return;
+  
+  if (campaignChart) campaignChart.destroy();
+  
+  const t = financeData.totals;
+  campaignChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Baskets', 'Welfares', 'Offerings', 'Donations'],
+      datasets: [{
+        data: [t.baskets, t.welfares, t.offerings, t.donations],
+        backgroundColor: ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+              return ctx.label + ': GH₵' + ctx.raw.toLocaleString() + ' (' + pct + '%)';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function openFinanceModal(t) {
   const isEdit = !!t;
   document.getElementById('fin-modal-title').textContent = isEdit ? 'Edit Transaction' : 'Add Transaction';
   document.getElementById('fin-id').value = isEdit ? t.id : '';
@@ -2549,6 +3317,15 @@ function openFinModal(t) {
   document.getElementById('f-desc').value = isEdit ? (t.description || '') : '';
   document.getElementById('f-notes').value = isEdit ? (t.notes || '') : '';
   document.getElementById('fin-modal').style.display = 'flex';
+}
+
+function editLatestTransaction() {
+  if (financeData.transactions.length > 0) {
+    const sorted = [...financeData.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+    openFinanceModal(sorted[0]);
+  } else {
+    toast('No transactions to edit.', 'info');
+  }
 }
 
 async function saveFin() {
@@ -2568,24 +3345,149 @@ async function deleteFin(id) {
   });
 }
 
+// Chart Edit Modals
+function openQuartersModal() {
+  document.getElementById('quarters-modal').style.display = 'flex';
+  // Populate with current data
+  ['Q1','Q2','Q3','Q4'].forEach(q => {
+    document.getElementById(`q-${q.toLowerCase()}-baskets`).value = financeData.quarterly[q].baskets;
+    document.getElementById(`q-${q.toLowerCase()}-welfares`).value = financeData.quarterly[q].welfares;
+    document.getElementById(`q-${q.toLowerCase()}-offerings`).value = financeData.quarterly[q].offerings;
+    document.getElementById(`q-${q.toLowerCase()}-donations`).value = financeData.quarterly[q].donations;
+  });
+}
+
+function saveQuarters() {
+  ['Q1','Q2','Q3','Q4'].forEach(q => {
+    financeData.quarterly[q].baskets = parseFloat(document.getElementById(`q-${q.toLowerCase()}-baskets`).value) || 0;
+    financeData.quarterly[q].welfares = parseFloat(document.getElementById(`q-${q.toLowerCase()}-welfares`).value) || 0;
+    financeData.quarterly[q].offerings = parseFloat(document.getElementById(`q-${q.toLowerCase()}-offerings`).value) || 0;
+    financeData.quarterly[q].donations = parseFloat(document.getElementById(`q-${q.toLowerCase()}-donations`).value) || 0;
+  });
+  renderQuarterlyChart();
+  closeModal('quarters-modal');
+  toast('Quarterly data updated!', 'success');
+}
+
+function openRevenueModal() {
+  document.getElementById('revenue-modal').style.display = 'flex';
+  ['Jan','Feb','Mar','Apr','May'].forEach(m => {
+    document.getElementById(`r-${m.toLowerCase()}-baskets`).value = financeData.monthly[m].baskets;
+    document.getElementById(`r-${m.toLowerCase()}-welfares`).value = financeData.monthly[m].welfares;
+    document.getElementById(`r-${m.toLowerCase()}-offerings`).value = financeData.monthly[m].offerings;
+    document.getElementById(`r-${m.toLowerCase()}-donations`).value = financeData.monthly[m].donations;
+  });
+}
+
+function saveRevenue() {
+  ['Jan','Feb','Mar','Apr','May'].forEach(m => {
+    financeData.monthly[m].baskets = parseFloat(document.getElementById(`r-${m.toLowerCase()}-baskets`).value) || 0;
+    financeData.monthly[m].welfares = parseFloat(document.getElementById(`r-${m.toLowerCase()}-welfares`).value) || 0;
+    financeData.monthly[m].offerings = parseFloat(document.getElementById(`r-${m.toLowerCase()}-offerings`).value) || 0;
+    financeData.monthly[m].donations = parseFloat(document.getElementById(`r-${m.toLowerCase()}-donations`).value) || 0;
+  });
+  renderRevenueChart();
+  closeModal('revenue-modal');
+  toast('Revenue data updated!', 'success');
+}
+
+function openCampaignModal() {
+  document.getElementById('campaign-modal').style.display = 'flex';
+  document.getElementById('c-baskets').value = financeData.totals.baskets;
+  document.getElementById('c-welfares').value = financeData.totals.welfares;
+  document.getElementById('c-offerings').value = financeData.totals.offerings;
+  document.getElementById('c-donations').value = financeData.totals.donations;
+}
+
+function saveCampaign() {
+  financeData.totals.baskets = parseFloat(document.getElementById('c-baskets').value) || 0;
+  financeData.totals.welfares = parseFloat(document.getElementById('c-welfares').value) || 0;
+  financeData.totals.offerings = parseFloat(document.getElementById('c-offerings').value) || 0;
+  financeData.totals.donations = parseFloat(document.getElementById('c-donations').value) || 0;
+  
+  // Update summary cards
+  const grandTotal = financeData.totals.baskets + financeData.totals.welfares + financeData.totals.offerings + financeData.totals.donations;
+  document.getElementById('fin-baskets').textContent = 'GH₵' + financeData.totals.baskets.toLocaleString();
+  document.getElementById('fin-welfares').textContent = 'GH₵' + financeData.totals.welfares.toLocaleString();
+  document.getElementById('fin-offerings').textContent = 'GH₵' + financeData.totals.offerings.toLocaleString();
+  document.getElementById('fin-donations').textContent = 'GH₵' + financeData.totals.donations.toLocaleString();
+  document.getElementById('fin-grand-total').textContent = 'GH₵' + grandTotal.toLocaleString();
+  
+  // Update campaign table
+  document.getElementById('camp-baskets').textContent = 'GH₵' + financeData.totals.baskets.toLocaleString();
+  document.getElementById('camp-welfares').textContent = 'GH₵' + financeData.totals.welfares.toLocaleString();
+  document.getElementById('camp-offerings').textContent = 'GH₵' + financeData.totals.offerings.toLocaleString();
+  document.getElementById('camp-donations').textContent = 'GH₵' + financeData.totals.donations.toLocaleString();
+  
+  // Update percentages
+  const campRows = document.querySelectorAll('#campaign-data-tbody tr');
+  if (campRows.length >= 4) {
+    const basketPct = grandTotal > 0 ? ((financeData.totals.baskets / grandTotal) * 100).toFixed(1) : 0;
+    const welfarePct = grandTotal > 0 ? ((financeData.totals.welfares / grandTotal) * 100).toFixed(1) : 0;
+    const offeringPct = grandTotal > 0 ? ((financeData.totals.offerings / grandTotal) * 100).toFixed(1) : 0;
+    const donationPct = grandTotal > 0 ? ((financeData.totals.donations / grandTotal) * 100).toFixed(1) : 0;
+    
+    campRows[0].querySelector('.percent-badge').textContent = basketPct + '%';
+    campRows[1].querySelector('.percent-badge').textContent = welfarePct + '%';
+    campRows[2].querySelector('.percent-badge').textContent = offeringPct + '%';
+    campRows[3].querySelector('.percent-badge').textContent = donationPct + '%';
+  }
+  
+  renderCampaignChart();
+  closeModal('campaign-modal');
+  toast('Campaign data updated!', 'success');
+}
+
+async function loadTithes() {
+  const tbody = document.getElementById('tithes-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading…</td></tr>';
+  try {
+    const list = await api.finance.getTithes() || [];
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><p>No tithes recorded.</p></div></td></tr>'; return; }
+    tbody.innerHTML = list.map(t => `
+      <tr>
+        <td>${fmtDate(t.date)}</td>
+        <td>${t.memberName || t.member || '—'}</td>
+        <td><strong>${fmt(t.amount)}</strong></td>
+        <td>${t.notes || '—'}</td>
+        <td><div class="actions-col">
+          <button class="btn-icon" onclick="openTitheModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><i class="fas fa-edit"></i></button>
+          <button class="btn-icon danger" onclick="deleteTithe('${t.id}')"><i class="fas fa-trash-alt"></i></button>
+        </div></td>
+      </tr>`).join('');
+  } catch { tbody.innerHTML = '<tr><td colspan="5" class="loading">Failed to load.</td></tr>'; }
+}
+
 function openTitheModal(t) {
   const isEdit = !!t;
   document.getElementById('tithe-modal-title').textContent = isEdit ? 'Edit Tithe' : 'Add Tithe';
-  document.getElementById('tithe-id').value = isEdit ? t.id : '';
+  document.getElementById('tithe-edit-id').value = isEdit ? t.id : '';
   document.getElementById('t-member').value = isEdit ? (t.memberName || t.member || '') : '';
+  document.getElementById('t-member').dataset.memberId = isEdit ? (t.memberId || '') : '';
   document.getElementById('t-amount').value = isEdit ? (t.amount || '') : '';
   document.getElementById('t-date').value = isEdit ? (t.date ? t.date.substring(0,10) : '') : new Date().toISOString().substring(0,10);
   document.getElementById('t-notes').value = isEdit ? (t.notes || '') : '';
   document.getElementById('tithe-modal').style.display = 'flex';
+  
+  // Load members cache for dropdown
+  loadTitheMembersCache();
 }
 
 async function saveTithe() {
-  const id = document.getElementById('tithe-id').value;
-  const data = { memberName: document.getElementById('t-member').value.trim(), amount: parseFloat(document.getElementById('t-amount').value), date: document.getElementById('t-date').value, notes: document.getElementById('t-notes').value.trim() };
+  const id = document.getElementById('tithe-edit-id').value;
+  const memberInput = document.getElementById('t-member');
+  const data = { 
+    memberName: memberInput.value.trim(), 
+    memberId: memberInput.dataset.memberId || null,
+    amount: parseFloat(document.getElementById('t-amount').value), 
+    date: document.getElementById('t-date').value, 
+    notes: document.getElementById('t-notes').value.trim() 
+  };
   if (!data.memberName || !data.amount) { toast('Member name and amount are required.', 'error'); return; }
   try {
     let res = id ? await api.finance.updateTithe(id, data) : await api.finance.addTithe(data);
-    if (res?.success !== false) { toast(id ? 'Tithe updated!' : 'Tithe added!', 'success'); closeModal('tithe-modal'); loadTithes(); }
+    if (res?.success !== false) { toast(id ? 'Tithe updated!' : 'Tithe added!', 'success'); closeModal('tithe-modal'); loadTithes(); loadFinance(); }
     else toast(res?.message || 'Failed.', 'error');
   } catch { toast('Error.', 'error'); }
 }
@@ -2852,6 +3754,534 @@ async function doChangePassword() {
     if (res?.success !== false) { toast('Password changed successfully!', 'success'); ['cp-current','cp-new','cp-confirm'].forEach(id => document.getElementById(id).value = ''); }
     else toast(res?.message || 'Failed to change password.', 'error');
   } catch { toast('Error changing password.', 'error'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// THEME TOGGLER
+// ═══════════════════════════════════════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+}
+
+// Initialize theme from localStorage on page load
+(function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+// MEMBER SEARCH DROPDOWN FOR TITHE
+// ═══════════════════════════════════════════════════════════════════
+let titheMembersCache = [];
+
+async function loadTitheMembersCache() {
+  if (!titheMembersCache.length) {
+    try {
+      titheMembersCache = await api.members.getAll() || [];
+    } catch (e) {
+      console.error('Failed to load members for tithe:', e);
+    }
+  }
+  return titheMembersCache;
+}
+
+function showTitheMemberDropdown() {
+  const dropdown = document.getElementById('tithe-member-dropdown');
+  filterTitheMemberList(document.getElementById('t-member').value);
+  dropdown.style.display = 'block';
+}
+
+async function filterTitheMemberList(query) {
+  const dropdown = document.getElementById('tithe-member-dropdown');
+  await loadTitheMembersCache();
+  
+  const q = (query || '').toLowerCase().trim();
+  let filtered = titheMembersCache;
+  
+  if (q) {
+    filtered = titheMembersCache.filter(m => {
+      const fullName = (m.fullName || `${m.firstName || ''} ${m.lastName || ''}`).toLowerCase();
+      return fullName.includes(q);
+    });
+  }
+  
+  if (!filtered.length) {
+    dropdown.innerHTML = '<div class="member-dropdown-empty">No members found</div>';
+    return;
+  }
+  
+  dropdown.innerHTML = filtered.slice(0, 10).map(m => {
+    const name = m.fullName || `${m.firstName || ''} ${m.lastName || ''}`.trim();
+    const initials = getInitials(name);
+    return `<div class="member-dropdown-item" onclick="selectTitheMember('${escapeHtml(name)}', '${m.id}')">
+      <div class="member-avatar-sm">${initials}</div>
+      <div>
+        <div style="font-weight:600;">${escapeHtml(name)}</div>
+        <div style="font-size:11px;color:var(--text-muted);">${m.phoneNumber || m.email || ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectTitheMember(name, memberId) {
+  document.getElementById('t-member').value = name;
+  document.getElementById('t-member').dataset.memberId = memberId;
+  document.getElementById('tithe-member-dropdown').style.display = 'none';
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#tithe-modal .form-group')) {
+    const dropdown = document.getElementById('tithe-member-dropdown');
+    if (dropdown) dropdown.style.display = 'none';
+  }
+  if (!e.target.closest('#income-modal .form-group')) {
+    const dropdown = document.getElementById('income-member-dropdown');
+    if (dropdown) dropdown.style.display = 'none';
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// INCOME MEMBER DROPDOWN
+// ═══════════════════════════════════════════════════════════════════
+function showIncomeMemberDropdown() {
+  const dropdown = document.getElementById('income-member-dropdown');
+  filterIncomeMemberList(document.getElementById('i-member').value);
+  dropdown.style.display = 'block';
+}
+
+async function filterIncomeMemberList(query) {
+  const dropdown = document.getElementById('income-member-dropdown');
+  await loadTitheMembersCache();
+  
+  const q = (query || '').toLowerCase().trim();
+  let filtered = titheMembersCache;
+  
+  if (q) {
+    filtered = titheMembersCache.filter(m => {
+      const fullName = (m.fullName || `${m.firstName || ''} ${m.lastName || ''}`).toLowerCase();
+      return fullName.includes(q);
+    });
+  }
+  
+  if (!filtered.length) {
+    dropdown.innerHTML = '<div class="member-dropdown-empty">No members found</div>';
+    return;
+  }
+  
+  dropdown.innerHTML = filtered.slice(0, 10).map(m => {
+    const name = m.fullName || `${m.firstName || ''} ${m.lastName || ''}`.trim();
+    const initials = getInitials(name);
+    return `<div class="member-dropdown-item" onclick="selectIncomeMember('${escapeHtml(name)}', '${m.id}')">
+      <div class="member-avatar-sm">${initials}</div>
+      <div>
+        <div style="font-weight:600;">${escapeHtml(name)}</div>
+        <div style="font-size:11px;color:var(--text-muted);">${m.phoneNumber || m.email || ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectIncomeMember(name, memberId) {
+  document.getElementById('i-member').value = name;
+  document.getElementById('i-member').dataset.memberId = memberId;
+  document.getElementById('income-member-dropdown').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FINANCE MODAL FUNCTIONS (Fixed)
+// ═══════════════════════════════════════════════════════════════════
+function openFinModal(t) {
+  openFinanceModal(t);
+}
+
+function openExpenseModal(expense) {
+  const isEdit = !!expense;
+  document.getElementById('expense-id').value = isEdit ? expense.id : '';
+  document.getElementById('e-amount').value = isEdit ? expense.amount : '';
+  document.getElementById('e-date').value = isEdit ? (expense.date ? expense.date.substring(0,10) : '') : new Date().toISOString().substring(0,10);
+  document.getElementById('e-category').value = isEdit ? (expense.category || 'other') : 'utilities';
+  document.getElementById('e-desc').value = isEdit ? (expense.description || '') : '';
+  document.getElementById('e-notes').value = isEdit ? (expense.notes || '') : '';
+  document.getElementById('expense-modal').style.display = 'flex';
+}
+
+async function saveExpense() {
+  const id = document.getElementById('expense-id').value;
+  const data = {
+    type: 'expense',
+    amount: parseFloat(document.getElementById('e-amount').value),
+    category: document.getElementById('e-category').value,
+    date: document.getElementById('e-date').value,
+    description: document.getElementById('e-desc').value.trim(),
+    notes: document.getElementById('e-notes').value.trim()
+  };
+  
+  if (!data.amount || data.amount <= 0) { toast('Please enter a valid amount.', 'error'); return; }
+  if (!data.date) { toast('Date is required.', 'error'); return; }
+  
+  try {
+    let res = id ? await api.finance.update(id, data) : await api.finance.create(data);
+    if (res?.success !== false) {
+      toast(id ? 'Expense updated!' : 'Expense added!', 'success');
+      closeModal('expense-modal');
+      loadFinance();
+    } else {
+      toast(res?.message || 'Failed to save expense.', 'error');
+    }
+  } catch (e) {
+    console.error('Error saving expense:', e);
+    toast('Error saving expense.', 'error');
+  }
+}
+
+function openIncomesModal() {
+  openIncomeModal();
+}
+
+function openExpensesModal() {
+  openExpenseModal();
+}
+
+function openIncomeModal(income) {
+  const isEdit = !!income;
+  document.getElementById('income-id').value = isEdit ? income.id : '';
+  document.getElementById('i-amount').value = isEdit ? income.amount : '';
+  document.getElementById('i-date').value = isEdit ? (income.date ? income.date.substring(0,10) : '') : new Date().toISOString().substring(0,10);
+  document.getElementById('i-category').value = isEdit ? (income.category || 'offering') : 'offering';
+  document.getElementById('i-desc').value = isEdit ? (income.description || '') : '';
+  document.getElementById('i-notes').value = isEdit ? (income.notes || '') : '';
+  document.getElementById('i-member').value = isEdit ? (income.memberName || '') : '';
+  
+  // Show/hide member field based on category
+  toggleIncomeMemberField();
+  
+  document.getElementById('income-modal').style.display = 'flex';
+  
+  // Load members cache for dropdown
+  loadTitheMembersCache();
+}
+
+function toggleIncomeMemberField() {
+  const category = document.getElementById('i-category').value;
+  const memberGroup = document.getElementById('income-member-group');
+  memberGroup.style.display = (category === 'tithe') ? 'block' : 'none';
+}
+
+// Add event listener to category select
+document.addEventListener('DOMContentLoaded', () => {
+  const catSelect = document.getElementById('i-category');
+  if (catSelect) {
+    catSelect.addEventListener('change', toggleIncomeMemberField);
+  }
+});
+
+async function saveIncome() {
+  const id = document.getElementById('income-id').value;
+  const category = document.getElementById('i-category').value;
+  
+  const data = {
+    type: 'income',
+    amount: parseFloat(document.getElementById('i-amount').value),
+    category: category,
+    date: document.getElementById('i-date').value,
+    description: document.getElementById('i-desc').value.trim(),
+    notes: document.getElementById('i-notes').value.trim()
+  };
+  
+  // Include member info for tithes
+  if (category === 'tithe') {
+    const memberInput = document.getElementById('i-member');
+    data.memberName = memberInput.value.trim();
+    data.memberId = memberInput.dataset.memberId || null;
+  }
+  
+  if (!data.amount || data.amount <= 0) { toast('Please enter a valid amount.', 'error'); return; }
+  if (!data.date) { toast('Date is required.', 'error'); return; }
+  
+  try {
+    let res;
+    // If it's a tithe, also add to tithes collection
+    if (category === 'tithe' && !id) {
+      res = await api.finance.addTithe({
+        amount: data.amount,
+        date: data.date,
+        memberName: data.memberName,
+        memberId: data.memberId,
+        notes: data.notes
+      });
+    } else {
+      res = id ? await api.finance.update(id, data) : await api.finance.create(data);
+    }
+    
+    if (res?.success !== false) {
+      toast(id ? 'Income updated!' : 'Income added!', 'success');
+      closeModal('income-modal');
+      loadFinance();
+    } else {
+      toast(res?.message || 'Failed to save income.', 'error');
+    }
+  } catch (e) {
+    console.error('Error saving income:', e);
+    toast('Error saving income.', 'error');
+  }
+}
+
+// ==================== Financial Statement Functions ====================
+
+function openStatementModal() {
+  document.getElementById('statement-modal').style.display = 'flex';
+  document.getElementById('stmt-period').value = 'this-month';
+  document.getElementById('custom-date-range').style.display = 'none';
+  document.getElementById('stmt-title').value = '';
+  
+  // Set default dates for custom range
+  const today = new Date();
+  const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  document.getElementById('stmt-from').value = firstOfMonth.toISOString().split('T')[0];
+  document.getElementById('stmt-to').value = today.toISOString().split('T')[0];
+}
+
+function handleStatementPeriodChange() {
+  const period = document.getElementById('stmt-period').value;
+  const customRange = document.getElementById('custom-date-range');
+  customRange.style.display = period === 'custom' ? 'block' : 'none';
+}
+
+function getStatementDateRange() {
+  const period = document.getElementById('stmt-period').value;
+  const today = new Date();
+  const year = today.getFullYear();
+  let fromDate, toDate;
+  
+  switch(period) {
+    case 'this-month':
+      fromDate = new Date(year, today.getMonth(), 1);
+      toDate = new Date(year, today.getMonth() + 1, 0);
+      break;
+    case 'last-month':
+      fromDate = new Date(year, today.getMonth() - 1, 1);
+      toDate = new Date(year, today.getMonth(), 0);
+      break;
+    case 'this-quarter':
+      const quarter = Math.floor(today.getMonth() / 3);
+      fromDate = new Date(year, quarter * 3, 1);
+      toDate = new Date(year, (quarter + 1) * 3, 0);
+      break;
+    case 'this-year':
+      fromDate = new Date(year, 0, 1);
+      toDate = new Date(year, 11, 31);
+      break;
+    case 'jan-jun':
+      fromDate = new Date(year, 0, 1);
+      toDate = new Date(year, 5, 30);
+      break;
+    case 'jul-dec':
+      fromDate = new Date(year, 6, 1);
+      toDate = new Date(year, 11, 31);
+      break;
+    case 'custom':
+      fromDate = new Date(document.getElementById('stmt-from').value);
+      toDate = new Date(document.getElementById('stmt-to').value);
+      break;
+    default:
+      fromDate = new Date(year, today.getMonth(), 1);
+      toDate = today;
+  }
+  
+  return { fromDate, toDate };
+}
+
+function formatStatementDate(date) {
+  return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function generateStatement() {
+  const { fromDate, toDate } = getStatementDateRange();
+  const customTitle = document.getElementById('stmt-title').value;
+  
+  // Filter transactions by date range
+  const transactions = (financeData.transactions || []).filter(t => {
+    const tDate = new Date(t.date);
+    return tDate >= fromDate && tDate <= toDate;
+  }).sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  if (transactions.length === 0) {
+    toast('No transactions found for the selected period.', 'warning');
+    return;
+  }
+  
+  // Calculate totals for this period
+  let totalIncome = 0, totalExpense = 0;
+  const incomeByCategory = { offerings: 0, tithe: 0, cof: 0, fundraising: 0, others: 0 };
+  const expenseByCategory = { utilities: 0, salaries: 0, maintenance: 0, others: 0 };
+  
+  transactions.forEach(t => {
+    const amount = parseFloat(t.amount) || 0;
+    const cat = (t.category || '').toLowerCase();
+    const type = (t.type || '').toLowerCase();
+    
+    if (type === 'expense') {
+      totalExpense += amount;
+      if (cat === 'utilities') expenseByCategory.utilities += amount;
+      else if (cat === 'salaries') expenseByCategory.salaries += amount;
+      else if (cat === 'maintenance') expenseByCategory.maintenance += amount;
+      else expenseByCategory.others += amount;
+    } else {
+      totalIncome += amount;
+      if (cat === 'offering' || cat === 'offerings') incomeByCategory.offerings += amount;
+      else if (cat === 'tithe' || cat === 'tithes') incomeByCategory.tithe += amount;
+      else if (cat === 'cof') incomeByCategory.cof += amount;
+      else if (cat === 'fundraising') incomeByCategory.fundraising += amount;
+      else incomeByCategory.others += amount;
+    }
+  });
+  
+  const netBalance = totalIncome - totalExpense;
+  const periodLabel = formatStatementDate(fromDate) + ' - ' + formatStatementDate(toDate);
+  const statementTitle = customTitle || 'Financial Statement';
+  
+  // Generate printable HTML
+  const printContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${statementTitle}</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 30px; color: #1f2937; }
+        .header { text-align: center; border-bottom: 3px solid #2563eb; padding-bottom: 20px; margin-bottom: 25px; }
+        .header h1 { font-size: 24px; color: #1f2937; margin-bottom: 5px; }
+        .header h2 { font-size: 18px; color: #2563eb; font-weight: 500; }
+        .header .period { font-size: 14px; color: #6b7280; margin-top: 8px; }
+        .header .generated { font-size: 11px; color: #9ca3af; margin-top: 5px; }
+        
+        .summary-box { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 15px; }
+        .summary-card { flex: 1; padding: 15px; border-radius: 8px; text-align: center; }
+        .summary-card.income { background: #dcfce7; border: 1px solid #86efac; }
+        .summary-card.expense { background: #fee2e2; border: 1px solid #fca5a5; }
+        .summary-card.balance { background: ${netBalance >= 0 ? '#dbeafe' : '#fef3c7'}; border: 1px solid ${netBalance >= 0 ? '#93c5fd' : '#fcd34d'}; }
+        .summary-card .label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .summary-card .value { font-size: 20px; font-weight: 700; margin-top: 5px; }
+        .summary-card.income .value { color: #16a34a; }
+        .summary-card.expense .value { color: #dc2626; }
+        .summary-card.balance .value { color: ${netBalance >= 0 ? '#2563eb' : '#d97706'}; }
+        
+        .section { margin-bottom: 25px; }
+        .section h3 { font-size: 14px; color: #374151; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #e5e7eb; }
+        
+        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .category-item { display: flex; justify-content: space-between; padding: 8px 12px; background: #f9fafb; border-radius: 5px; }
+        .category-item .cat-name { color: #374151; }
+        .category-item .cat-value { font-weight: 600; }
+        .category-item.income .cat-value { color: #16a34a; }
+        .category-item.expense .cat-value { color: #dc2626; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { background: #f3f4f6; padding: 10px 8px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+        td { padding: 10px 8px; border-bottom: 1px solid #e5e7eb; }
+        tr:nth-child(even) { background: #f9fafb; }
+        .amount-income { color: #16a34a; font-weight: 500; }
+        .amount-expense { color: #dc2626; font-weight: 500; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        
+        .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 11px; color: #9ca3af; }
+        
+        @media print {
+          body { padding: 15px; }
+          .summary-box { page-break-inside: avoid; }
+          table { page-break-inside: auto; }
+          tr { page-break-inside: avoid; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>HOUSE OF GLORY CHURCH</h1>
+        <h2>${statementTitle}</h2>
+        <div class="period">${periodLabel}</div>
+        <div class="generated">Generated on ${new Date().toLocaleString('en-GB')}</div>
+      </div>
+      
+      <div class="summary-box">
+        <div class="summary-card income">
+          <div class="label">Total Income</div>
+          <div class="value">GH₵${totalIncome.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+        </div>
+        <div class="summary-card expense">
+          <div class="label">Total Expense</div>
+          <div class="value">GH₵${totalExpense.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+        </div>
+        <div class="summary-card balance">
+          <div class="label">Net ${netBalance >= 0 ? 'Surplus' : 'Deficit'}</div>
+          <div class="value">GH₵${Math.abs(netBalance).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h3>Summary By Category</h3>
+        <div class="category-grid">
+          <div class="category-item income"><span class="cat-name">Offerings</span><span class="cat-value">GH₵${incomeByCategory.offerings.toLocaleString()}</span></div>
+          <div class="category-item income"><span class="cat-name">Tithes</span><span class="cat-value">GH₵${incomeByCategory.tithe.toLocaleString()}</span></div>
+          <div class="category-item income"><span class="cat-name">COF</span><span class="cat-value">GH₵${incomeByCategory.cof.toLocaleString()}</span></div>
+          <div class="category-item income"><span class="cat-name">Fund Raising</span><span class="cat-value">GH₵${incomeByCategory.fundraising.toLocaleString()}</span></div>
+          <div class="category-item expense"><span class="cat-name">Utilities</span><span class="cat-value">GH₵${expenseByCategory.utilities.toLocaleString()}</span></div>
+          <div class="category-item expense"><span class="cat-name">Salaries</span><span class="cat-value">GH₵${expenseByCategory.salaries.toLocaleString()}</span></div>
+          <div class="category-item expense"><span class="cat-name">Maintenance</span><span class="cat-value">GH₵${expenseByCategory.maintenance.toLocaleString()}</span></div>
+          <div class="category-item expense"><span class="cat-name">Other Expenses</span><span class="cat-value">GH₵${expenseByCategory.others.toLocaleString()}</span></div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h3>Transaction Details (${transactions.length} transactions)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th class="text-center">Type</th>
+              <th class="text-right">Amount (GH₵)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${transactions.map((t, i) => `
+              <tr>
+                <td>${new Date(t.date).toLocaleDateString('en-GB')}</td>
+                <td>${t.description || t.notes || '-'}</td>
+                <td>${(t.category || '-').charAt(0).toUpperCase() + (t.category || '-').slice(1)}</td>
+                <td class="text-center">${(t.type || 'income').charAt(0).toUpperCase() + (t.type || 'income').slice(1)}</td>
+                <td class="text-right ${t.type === 'expense' ? 'amount-expense' : 'amount-income'}">${parseFloat(t.amount).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="footer">
+        <p>This is a computer-generated document. House of Glory Church Financial Management System.</p>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  // Open print window
+  const printWindow = window.open('', '_blank', 'width=900,height=700');
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  
+  // Trigger print after content loads
+  printWindow.onload = function() {
+    printWindow.print();
+  };
+  
+  closeModal('statement-modal');
+  toast('Statement generated. Print dialog should open.', 'success');
 }
 </script>
 </body>
